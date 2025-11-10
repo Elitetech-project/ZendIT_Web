@@ -1,6 +1,8 @@
 "use client"
 
+import OnboardingScreen from "@/components/Onboarding"
 import { useMobile } from "@/hooks/use-mobile"
+import { useEffect, useState } from "react"
 
 
 
@@ -8,6 +10,21 @@ import { useMobile } from "@/hooks/use-mobile"
 
 export default function WebAppLayout({ children }: { children: React.ReactNode }) {
     const { isLoading: mobileLoading, isMobile } = useMobile()
+    const [showOnBoarding, setShowOnboarding] = useState(false)
+
+
+    useEffect(() => {
+        const completed = localStorage.getItem("onboardingCompleted")
+        if (!completed) {
+            setShowOnboarding(true)
+        }
+    }, [])
+
+
+    const handleFinish = () => {
+        localStorage.setItem("onboardingCompleted", "true");
+        setShowOnboarding(false);
+    };
 
 
 
@@ -31,6 +48,14 @@ export default function WebAppLayout({ children }: { children: React.ReactNode }
     }
 
 
+
+
+
+    if (isMobile && showOnBoarding) {
+        return (
+            <OnboardingScreen onFinish={handleFinish} />
+        )
+    }
 
 
     return (
