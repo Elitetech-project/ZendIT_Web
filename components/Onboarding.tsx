@@ -26,7 +26,7 @@ const SlideOne = () => (
       <h1 className="mr-auto text-start font-semibold text-4xl leading-[170%]">
         Welcome To
         <br />
-        Zend<span className="text-[#F5C249]">It</span>
+        Zend<span className="text-[#C10F45]">It</span>
       </h1>
     </div>
   </div>
@@ -64,7 +64,7 @@ const SlideThree = () => (
       />
     </div>
     <div className="w-full px-[9%] mb-[6%]">
-      <h1 className="mr-auto text-start font-semibold text-4xl leading-[170%]">
+      <h1 className="mr-auto text-start font-semibold text-4xl leading-[170%] text-white">
         Fast and reliable
         <br /> Market updates
       </h1>
@@ -100,7 +100,7 @@ export default function OnboardingScreen({ onFinish }: OnboardingScreenProps) {
       <div className="px-[7%] py-[6%] w-full flex items-center justify-end">
         <button
           onClick={handleSkip}
-          className="text-[#F5C249] text-xl font-normal tracking-wider cursor-pointer"
+          className="text-[#C10F45] text-xl font-normal tracking-wider cursor-pointer"
         >
           Skip
         </button>
@@ -130,7 +130,7 @@ export default function OnboardingScreen({ onFinish }: OnboardingScreenProps) {
             onClick={() => setCurrent(idx)}
               key={idx}
               className={`block h-1.5 w-2.5 rounded-lg transition-all duration-300 ${
-                idx === current ? "bg-[#F5C249] w-5" : "bg-[#494D58]"
+                idx === current ? "bg-[#C10F45] w-5" : "bg-[#494D58]"
               }`}
             />
           ))}
@@ -138,7 +138,7 @@ export default function OnboardingScreen({ onFinish }: OnboardingScreenProps) {
 
         <button
           onClick={handleNext}
-          className="bg-[#F5C249] h-12 w-12 rounded-full flex items-center justify-center cursor-pointer font-bold"
+          className="bg-[#C10F45] h-12 w-12 rounded-full flex items-center justify-center cursor-pointer font-bold text-white"
           aria-label="next"
         >
           <ChevronRight size={25} />
