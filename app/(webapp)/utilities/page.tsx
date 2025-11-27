@@ -6,11 +6,13 @@ import { Smartphone, Zap, Tv, Wifi } from 'lucide-react';
 export default function UtilitiesPage() {
     return (
         <Shell>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col pt-[10%] gap-6">
+                
+                {/*
                 <h1 className="text-2xl font-bold">Utilities</h1>
                 <p className="text-muted-foreground">Pay bills and top up instantly.</p>
 
-                {/* <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                     {[
                         { icon: Smartphone, label: 'Airtime' },
                         { icon: Wifi, label: 'Data' },
@@ -26,8 +28,8 @@ export default function UtilitiesPage() {
                     ))}
                 </div> */}
 
-                <div className="rounded-2xl bg-primary/5 p-6 text-center border border-primary/10">
-                    <p className="text-sm font-medium text-primary">More services coming soon!</p>
+                <div className=" p-6 text-center ">
+                    <p className="text-sm font-medium text-primary">coming soon!</p>
                 </div>
             </div>
         </Shell>

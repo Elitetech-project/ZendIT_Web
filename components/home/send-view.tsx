@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Search, QrCode, ArrowLeft, Building2, Send } from 'lucide-react';
 import { Scanner } from '@yudiel/react-qr-scanner';
+import { TransactionModal, Transaction } from '@/components/transaction-modal';
 
 type ViewMode = 'initial' | 'scan' | 'transfer';
 
@@ -14,14 +15,17 @@ const mockBankAccounts: Record<string, string> = {
     '4444555566': 'Bob Williams',
 };
 
-// Mock recent transactions
-const recentTransactions = [
-    { id: 1, name: 'John Doe', date: '2025-11-27', time: '14:30' },
-    { id: 2, name: 'Jane Smith', date: '2025-11-27', time: '12:15' },
-    { id: 3, name: 'Alice Johnson', date: '2025-11-26', time: '18:45' },
-    { id: 4, name: 'Bob Williams', date: '2025-11-26', time: '09:20' },
-    { id: 5, name: 'Charlie Brown', date: '2025-11-25', time: '16:00' },
+// Mock recent transactions with status
+const recentTransactions: Transaction[] = [
+    { id: 1, name: 'John Doe', date: '2025-11-27', time: '14:30', amount: '$250.00', status: 'successful', type: 'send', bankName: 'Chase Bank', accountNumber: '1234567890' },
+    { id: 2, name: 'Jane Smith', date: '2025-11-27', time: '12:15', amount: '$150.50', status: 'pending', type: 'send', bankName: 'Bank of America', accountNumber: '0987654321' },
+    { id: 3, name: 'Alice Johnson', date: '2025-11-26', time: '18:45', amount: '$89.99', status: 'successful', type: 'send', bankName: 'Wells Fargo', accountNumber: '1111222233' },
+    { id: 4, name: 'Bob Williams', date: '2025-11-26', time: '09:20', amount: '$320.00', status: 'cancelled', type: 'send', bankName: 'Citibank', accountNumber: '4444555566' },
+    { id: 5, name: 'Charlie Brown', date: '2025-11-25', time: '16:00', amount: '$75.25', status: 'successful', type: 'send', bankName: 'TD Bank', accountNumber: '5555666677' },
 ];
+
+
+
 
 export function SendView() {
     const [mode, setMode] = useState<ViewMode>('initial');
@@ -29,6 +33,8 @@ export function SendView() {
     const [accountNumber, setAccountNumber] = useState('');
     const [accountName, setAccountName] = useState('');
     const [scannedData, setScannedData] = useState('');
+    const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleScan = (result: any) => {
         if (result && result[0]?.rawValue) {
@@ -48,66 +54,80 @@ export function SendView() {
         }
     };
 
+    const handleTransactionClick = (transaction: Transaction) => {
+        setSelectedTransaction(transaction);
+        setIsModalOpen(true);
+    };
+
     // Initial View
     if (mode === 'initial') {
         return (
-            <div className="flex flex-col gap-6">
-            
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <input
-                        type="text"
-                        placeholder="Search name, @username, or address"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-xl bg-gray-100 py-3 pl-10 pr-4 text-sm outline-none ring-0 ring-transparent focus:ring-primary transition-all"
-                    />
-                </div>
+            <>
+                <div className="flex flex-col gap-6">
 
-          
-                <div className="grid grid-cols-2 gap-4">
-                    <button
-                        onClick={() => setMode('scan')}
-                        className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-[#f17c37] p-6 text-white hover:opacity-90 transition-opacity"
-                    >
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-                            <QrCode className="h-6 w-6" />
-                        </div>
-                        <span className="text-lg font-semibold">Scan QR</span>
-                    </button>
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <input
+                            type="text"
+                            placeholder="Search name, @username, or address"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full rounded-xl bg-gray-100 py-3 pl-10 pr-4 text-sm outline-none ring-0 ring-transparent focus:ring-primary transition-all"
+                        />
+                    </div>
 
-                  
-                    <button
-                        onClick={() => setMode('transfer')}
-                        className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-[#f15b35] p-6 text-white hover:opacity-90 transition-opacity"
-                    >
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-                            <Building2 className="h-6 w-6" />
-                        </div>
-                        <span className="text-lg font-semibold">Direct Transfer</span>
-                    </button>
-                </div>
 
-               
-                <div>
-                    <h3 className="mb-3 text-sm font-medium text-muted-foreground">Recent Transactions</h3>
-                    <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
-                        {recentTransactions.map((transaction) => (
-                            <div
-                                key={transaction.id}
-                                className="flex items-center justify-between rounded-xl bg-secondary p-4 hover:bg-secondary/80 transition-colors cursor-pointer"
-                            >
-                                <div className="flex flex-col">
-                                    <span className="text-sm font-medium">{transaction.name}</span>
-                                    <span className="text-xs text-muted-foreground">
-                                        {transaction.date} • {transaction.time}
-                                    </span>
-                                </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <button
+                            onClick={() => setMode('scan')}
+                            className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-[#f17c37] p-6 text-white hover:opacity-90 transition-opacity"
+                        >
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                                <QrCode className="h-6 w-6" />
                             </div>
-                        ))}
+                            <span className="text-md font-semibold">Scan QR</span>
+                        </button>
+
+
+                        <button
+                            onClick={() => setMode('transfer')}
+                            className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-[#f15b35] p-6 text-white hover:opacity-90 transition-opacity"
+                        >
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                                <Building2 className="h-6 w-6" />
+                            </div>
+                            <span className="text-md font-semibold">Direct Transfer</span>
+                        </button>
+                    </div>
+
+
+                    <div>
+                        <h3 className="mb-3 text-sm font-medium text-muted-foreground">Recent Transactions</h3>
+                        <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
+                            {recentTransactions.map((transaction) => (
+                                <div
+                                    key={transaction.id}
+                                    onClick={() => handleTransactionClick(transaction)}
+                                    className="flex items-center justify-between rounded-xl bg-secondary p-4 hover:bg-secondary/80 transition-colors cursor-pointer"
+                                >
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-medium">{transaction.name}</span>
+                                        <span className="text-xs text-muted-foreground">
+                                            {transaction.date} • {transaction.time}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
+
+                <TransactionModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    transaction={selectedTransaction}
+                />
+            </>
         );
     }
 
@@ -131,7 +151,7 @@ export function SendView() {
                     <Scanner
                         onScan={handleScan}
                         components={{
-                            
+
                             finder: true,
                         }}
                         styles={{
