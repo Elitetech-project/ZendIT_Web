@@ -55,7 +55,7 @@ export default function HistoryPage() {
 
             <TransactionModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onCloseAction={() => setIsModalOpen(false)}
                 transaction={selectedTransaction}
             />
         </Shell>

@@ -124,7 +124,7 @@ export function SendView() {
 
                 <TransactionModal
                     isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    onCloseAction={() => setIsModalOpen(false)}
                     transaction={selectedTransaction}
                 />
             </>

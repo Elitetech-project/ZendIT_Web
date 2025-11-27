@@ -93,7 +93,7 @@ export function Header() {
                                                 <button
                                                     onClick={openConnectModal}
                                                     type="button"
-                                                    className="px-4 py-2 bg-[#e33e38] text-primary-foreground rounded-xl font-medium hover:opacity-90 transition-opacity"
+                                                    className="px-4 py-2 text-md bg-[#e33e38] text-primary-foreground rounded-xl font-medium hover:opacity-90 transition-opacity"
                                                 >
                                                     Connect Wallet
                                                 </button>

@@ -61,7 +61,7 @@ export default function RewardsPage() {
 
             <TransactionModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onCloseAction={() => setIsModalOpen(false)}
                 transaction={selectedTransaction}
             />
         </Shell>

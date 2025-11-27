@@ -20,11 +20,11 @@ export interface Transaction {
 
 interface TransactionModalProps {
     isOpen: boolean;
-    onClose: () => void;
+    onCloseAction: () => void;
     transaction: Transaction | null;
 }
 
-export function TransactionModal({ isOpen, onClose, transaction }: TransactionModalProps) {
+export function TransactionModal({ isOpen, onCloseAction, transaction }: TransactionModalProps) {
     if (!transaction) return null;
 
     const getStatusConfig = (status: TransactionStatus) => {
@@ -68,7 +68,7 @@ export function TransactionModal({ isOpen, onClose, transaction }: TransactionMo
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        onClick={onClose}
+                        onClick={onCloseAction}
                         className="fixed inset-0 bg-black/50 z-50"
                     />
 
@@ -79,23 +79,23 @@ export function TransactionModal({ isOpen, onClose, transaction }: TransactionMo
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         className="fixed inset-x-4 h-[90vh] top-1/2 -translate-y-1/2 z-50 max-w-md mx-auto"
                     >
-                        <div className="bg-background rounded-md shadow-2xl overflow-hidden">
+                        <div className="bg-background rounded-2xl shadow-2xl overflow-hidden">
                             {/* Header */}
                             <div className="relative bg-gradient-to-br from-[#f17c37] to-[#e33e38] p-6 text-white">
                                 <button
-                                    onClick={onClose}
+                                    onClick={onCloseAction}
                                     className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
                                 >
                                     <X className="h-5 w-5" />
                                 </button>
                                 <h2 className="text-xl font-bold mb-2">Transaction Details</h2>
                                 <p className="text-sm opacity-90">Reference: {transaction.reference || `TXN${transaction.id}`}</p>
-                                 <p className="text-sm opacity-90">Amount: {transaction.amount}</p>
+                                <p className="text-sm opacity-90">Amount: {transaction.amount}</p>
                             </div>
 
                             {/* Content */}
                             <div className="p-6 space-y-4">
-                          {/* Amount */}
+                                {/* Amount */}
                                 <div className="text-center flex items-center justify-center gap-3 py-2">
                                     <p className="text-2xl font-bold mb-1">Amount</p>
                                     <p className="text-2xl font-bold">{transaction.amount}</p>
@@ -103,17 +103,17 @@ export function TransactionModal({ isOpen, onClose, transaction }: TransactionMo
 
                                 {/* Details */}
                                 <div className="space-y-3 border-t pt-4">
-                                 <div className={`flex items-center gap-3`}>
-                                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                                             <StatusIcon className="h-5 w-5 text-muted-foreground" />
+                                    <div className={`flex items-center gap-3`}>
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+                                            <StatusIcon className="h-5 w-5 text-muted-foreground" />
                                         </div>
-                                        <div  className="flex-1">
-                                             <p className="text-xs text-muted-foreground">Recipient</p>
-                                    <span className={`font-semibold `}>
-                                        {statusConfig.label}
-                                    </span>
+                                        <div className="flex-1">
+                                            <p className="text-xs text-muted-foreground">Recipient</p>
+                                            <span className={`font-semibold `}>
+                                                {statusConfig.label}
+                                            </span>
                                         </div>
-                                </div>
+                                    </div>
                                     <div className="flex items-center gap-3">
                                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
                                             <User className="h-5 w-5 text-muted-foreground" />
@@ -173,7 +173,7 @@ export function TransactionModal({ isOpen, onClose, transaction }: TransactionMo
                                     )}
                                 </div>
 
-                               
+
                             </div>
                         </div>
                     </motion.div>
