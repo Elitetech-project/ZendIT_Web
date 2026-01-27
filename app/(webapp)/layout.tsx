@@ -8,36 +8,36 @@ import { useEffect, useState } from "react"
 
 
 export default function WebAppLayout({ children }: { children: React.ReactNode }) {
-    const [showOnBoarding, setShowOnboarding] = useState(false)
+    // const [showOnBoarding, setShowOnboarding] = useState(false)
 
 
 
 
     // Check if the onboarding screen has been displayed to the user before
-    useEffect(() => {
-        const completed = localStorage.getItem("onboardingCompleted")
-        if (!completed) {
-            setShowOnboarding(true)
-        }
-    }, [])
+    // useEffect(() => {
+    //     const completed = localStorage.getItem("onboardingCompleted")
+    //     if (!completed) {
+    //         setShowOnboarding(true)
+    //     }
+    // }, [])
 
 
 
     // marks the end of the display of the onboarding screen
-    const handleFinish = () => {
-        localStorage.setItem("onboardingCompleted", "true");
-        setShowOnboarding(false);
-    };
+    // const handleFinish = () => {
+    //     localStorage.setItem("onboardingCompleted", "true");
+    //     setShowOnboarding(false);
+    // };
 
 
 
 
 
-    if (showOnBoarding) {
-        return (
-            <OnboardingScreen onFinish={handleFinish} />
-        )
-    }
+    // if (showOnBoarding) {
+    //     return (
+    //         <OnboardingScreen onFinish={handleFinish} />
+    //     )
+    // }
 
 
     return (
