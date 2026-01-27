@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Bell, X, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { Bell, X, CheckCircle, Clock, XCircle, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,6 +18,8 @@ interface Notification {
 }
 
 export function Header() {
+    const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
     const [notifications, setNotifications] = useState<Notification[]>([
         { id: 1, title: 'Payment Received', message: 'You received $120.00 from User 2', time: '5m ago', type: 'success', read: false },
@@ -26,6 +29,10 @@ export function Header() {
     ]);
 
     const unreadCount = notifications.filter(n => !n.read).length;
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const markAsRead = (id: number) => {
         setNotifications(notifications.map(n =>
@@ -51,9 +58,9 @@ export function Header() {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="flex py-3 items-center mx-auto justify-between px-6">
-                <Link href="/" className="flex items-center gap-2">
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur py-2 supports-[backdrop-filter]:bg-background/60">
+            <div className="flex py-3 items-center mx-auto justify-between md:justify-end px-6">
+                <Link href="/" className="flex items-center gap-2 md:hidden">
                     <Image src="/logo.png" alt="Logo" width={100} height={100} className='w-28 h-full' />
                 </Link>
 
@@ -93,7 +100,7 @@ export function Header() {
                                                 <button
                                                     onClick={openConnectModal}
                                                     type="button"
-                                                    className="px-4 py-2 text-md bg-[#e33e38] text-primary-foreground rounded-xl font-medium hover:opacity-90 transition-opacity"
+                                                    className="px-4 py-2 text-md bg-brand text-brand-foreground rounded-xl font-medium hover:opacity-90 transition-opacity"
                                                 >
                                                     Connect Wallet
                                                 </button>
@@ -117,12 +124,26 @@ export function Header() {
                         }}
                     </ConnectButton.Custom>
 
+                    {mounted && (
+                        <button
+                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                            className="p-2 hover:bg-accent rounded-full transition-colors"
+                            aria-label="Toggle theme"
+                        >
+                            {theme === 'dark' ? (
+                                <Sun className="h-5 w-5 text-yellow-500" />
+                            ) : (
+                                <Moon className="h-5 w-5 text-slate-700" />
+                            )}
+                        </button>
+                    )}
+
                     <div className="relative">
                         <button
                             onClick={() => setShowNotifications(!showNotifications)}
                             className="relative p-2 hover:bg-accent rounded-full transition-colors"
                         >
-                            <Bell className="h-5 w-5" />
+                            <Bell className="h-5 w-5 dark:text-white" />
                             {unreadCount > 0 && (
                                 <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500" />
                             )}

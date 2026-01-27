@@ -37,8 +37,8 @@ export default function Home() {
           <button
             onClick={() => setActiveTab('send')}
             className={clsx(
-              "relative flex-1 rounded-xl py-3 text-sm font-semibold transition-colors",
-              activeTab === 'send' ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground bg-gray-100"
+              "relative flex-1  rounded-xl py-3 text-sm font-semibold transition-colors",
+              activeTab === 'send' ? "text-primary-foreground dark:text-white" : "text-muted-foreground dark:bg-[#e33e38]  hover:text-foreground bg-gray-100"
             )}
           >
             {activeTab === 'send' && (
@@ -54,13 +54,13 @@ export default function Home() {
             onClick={() => setActiveTab('receive')}
             className={clsx(
               "relative flex-1 rounded-xl py-3 text-sm font-semibold transition-colors",
-              activeTab === 'receive' ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground bg-gray-100"
+              activeTab === 'receive' ? "text-primary-foreground dark:text-white" : "text-muted-foreground dark:bg-[#e33e38]/40 hover:text-foreground bg-gray-100"
             )}
           >
             {activeTab === 'receive' && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 rounded-xl bg-[#e33e38] shadow-sm"
+                className="absolute inset-0  rounded-xl bg-[#e33e38] shadow-sm"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}

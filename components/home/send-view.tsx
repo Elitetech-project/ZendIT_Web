@@ -72,15 +72,15 @@ export function SendView() {
                             placeholder="Search name, @username, or address"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full rounded-xl bg-gray-100 py-3 pl-10 pr-4 text-sm outline-none ring-0 ring-transparent focus:ring-primary transition-all"
+                            className="w-full md:w-[100%] rounded-xl bg-gray-100 dark:bg-transparent dark:border dark:text-white py-3 pl-10 pr-4 text-sm outline-none ring-0 ring-transparent focus:ring-primary transition-all"
                         />
                     </div>
 
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col md:flex-row  gap-4 ">
                         <button
                             onClick={() => setMode('scan')}
-                            className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-[#f17c37] p-6 text-white hover:opacity-90 transition-opacity"
+                            className="flex flex-col  items-center w-full  justify-center gap-3 rounded-2xl bg-[#f17c37] p-6 text-white hover:opacity-90 transition-opacity"
                         >
                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
                                 <QrCode className="h-6 w-6" />
@@ -91,7 +91,7 @@ export function SendView() {
 
                         <button
                             onClick={() => setMode('transfer')}
-                            className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-[#f15b35] p-6 text-white hover:opacity-90 transition-opacity"
+                            className="flex flex-col items-center w-full justify-center gap-3 rounded-2xl bg-[#f15b35] p-6 text-white hover:opacity-90 transition-opacity"
                         >
                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
                                 <Building2 className="h-6 w-6" />
@@ -103,7 +103,7 @@ export function SendView() {
 
                     <div>
                         <h3 className="mb-3 text-sm font-medium text-muted-foreground">Recent Transactions</h3>
-                        <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
+                        <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto scrollbar-hide">
                             {recentTransactions.map((transaction) => (
                                 <div
                                     key={transaction.id}
@@ -111,7 +111,7 @@ export function SendView() {
                                     className="flex items-center justify-between rounded-xl bg-secondary p-4 hover:bg-secondary/80 transition-colors cursor-pointer"
                                 >
                                     <div className="flex flex-col">
-                                        <span className="text-sm font-medium">{transaction.name}</span>
+                                        <span className="text-sm font-medium dark:text-white">{transaction.name}</span>
                                         <span className="text-xs text-muted-foreground">
                                             {transaction.date} • {transaction.time}
                                         </span>
@@ -141,13 +141,13 @@ export function SendView() {
                         onClick={() => setMode('initial')}
                         className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
                     >
-                        <ArrowLeft className="h-5 w-5" />
+                        <ArrowLeft className="h-5 dark:text-white w-5" />
                     </button>
                     <h2 className="text-lg font-semibold">Scan QR Code</h2>
                 </div>
 
                 {/* QR Scanner */}
-                <div className="relative overflow-hidden rounded-2xl bg-black aspect-square">
+                <div className="relative flex justify-center items-center mx-auto overflow-hidden rounded-2xl bg-black md:w-[50%] md:h-[60%] aspect-square">
                     <Scanner
                         onScan={handleScan}
                         components={{
@@ -187,13 +187,13 @@ export function SendView() {
                         onClick={() => setMode('initial')}
                         className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
                     >
-                        <ArrowLeft className="h-5 w-5" />
+                        <ArrowLeft className="h-5 dark:text-white w-5" />
                     </button>
                     <h2 className="text-lg font-semibold">Direct Transfer</h2>
                 </div>
 
                 {/* Transfer Form */}
-                <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Bank Name Input */}
                     <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -204,7 +204,7 @@ export function SendView() {
                             <input
                                 type="text"
                                 placeholder="Enter bank name"
-                                className="w-full rounded-xl bg-secondary py-3 pl-10 pr-4 text-sm outline-none ring-0 ring-transparent focus:ring-primary transition-all"
+                                className="w-full dark:bg-transparent dark:border dark:text-white rounded-xl bg-secondary py-3 pl-10 pr-4 text-sm outline-none ring-0 ring-transparent focus:ring-primary transition-all"
                             />
                         </div>
                     </div>
@@ -219,7 +219,7 @@ export function SendView() {
                             placeholder="Enter account number"
                             value={accountNumber}
                             onChange={(e) => handleAccountNumberChange(e.target.value)}
-                            className="w-full rounded-xl bg-secondary py-3 px-4 text-sm outline-none ring-0 ring-transparent focus:ring-primary transition-all"
+                            className="w-full dark:bg-transparent dark:border dark:text-white rounded-xl bg-secondary py-3 px-4 text-sm outline-none ring-0 ring-transparent focus:ring-primary transition-all"
                         />
                     </div>
 
@@ -239,16 +239,17 @@ export function SendView() {
                         <input
                             type="number"
                             placeholder="0.00"
-                            className="w-full rounded-xl bg-secondary py-3 px-4 text-sm outline-none ring-0 ring-transparent focus:ring-primary transition-all"
+                            className="w-full dark:bg-transparent dark:border dark:text-white rounded-xl bg-secondary py-3 px-4 text-sm outline-none ring-0 ring-transparent focus:ring-primary transition-all"
                         />
                     </div>
 
                     {/* Send Button */}
-                    <button className="flex items-center justify-center gap-2 w-full rounded-xl bg-[#e33e38] py-3 font-semibold text-primary-foreground hover:opacity-90 transition-opacity mt-2">
-                        <Send className="h-4 w-4" />
-                        Send Money
-                    </button>
+
                 </div>
+                <button className="flex items-center dark:text-white justify-center gap-2 w-full md:w-[50%] mx-auto rounded-xl bg-[#e33e38] py-3 font-semibold text-primary-foreground hover:opacity-90 transition-opacity mt-2">
+                    <Send className="h-4 w-4" />
+                    Send Money
+                </button>
             </div>
         );
     }
