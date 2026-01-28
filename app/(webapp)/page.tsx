@@ -12,11 +12,11 @@ export default function Home() {
 
   return (
     <Shell>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 font-poppins">
         {/* Balance Card */}
         <div className="relative overflow-hidden rounded-3xl bg-[#f17c37] p-6 text-white shadow-lg">
           <div className="relative z-10">
-            <span className="text-sm font-medium opacity-80">Total Balance</span>
+            <span className="text-sm font-medium opacity-80">Total Balance --font poppins </span>
             <h2 className="mt-1 text-4xl font-bold">$12,450.00</h2>
             <div className="mt-4 flex gap-2">
               <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium backdrop-blur-md">

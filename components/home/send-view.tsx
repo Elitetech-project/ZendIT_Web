@@ -102,7 +102,7 @@ export function SendView() {
 
 
                     <div>
-                        <h3 className="mb-3 text-sm font-medium text-muted-foreground">Recent Transactions</h3>
+                        <h3 className=" mb-3 text-sm font-medium text-muted-foreground">Recent Transactions</h3>
                         <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto scrollbar-hide">
                             {recentTransactions.map((transaction) => (
                                 <div
