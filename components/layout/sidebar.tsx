@@ -66,12 +66,13 @@ export function Sidebar({ className }: SidebarProps) {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
+                                "flex font-roboto items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
                                 isActive
                                     ? "bg-brand/10 text-brand shadow-sm"
                                     : "text-muted-foreground hover:bg-brand/5 hover:text-brand"
                             )}
                         >
+                            roboto font
                             <Icon className={cn("h-5 w-5", isActive && "fill-current")} />
                             <span>{item.title}</span>
                         </Link>
@@ -81,7 +82,7 @@ export function Sidebar({ className }: SidebarProps) {
             <div className="border-t p-4">
                 {/* Optional: User profile or help link could go here */}
                 <div className="rounded-2xl bg-secondary/50 p-4">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Support</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 font-inter ">Support --inter</p>
                     <Link href="#" className="text-sm text-foreground hover:underline">Help Center</Link>
                 </div>
             </div>

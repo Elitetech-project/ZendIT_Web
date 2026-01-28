@@ -1,7 +1,7 @@
 "use client"
 
 import OnboardingScreen from "@/components/Onboarding"
-import { useEffect, useState } from "react"
+
 
 
 
