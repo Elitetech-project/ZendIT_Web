@@ -81,7 +81,7 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                     >
                         <div className="bg-background rounded-2xl shadow-2xl overflow-hidden">
                             {/* Header */}
-                            <div className="relative bg-gradient-to-br from-[#f17c37] to-[#e33e38] p-6 text-white">
+                            <div className="relative bg-gradient-to-br from-[#f17c37] to-[#e33e38] dark:from-orange-950 dark:to-red-950 p-6 text-white border-b border-transparent dark:border-orange-500/20">
                                 <button
                                     onClick={onCloseAction}
                                     className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
