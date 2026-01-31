@@ -37,8 +37,8 @@ export default function Page() {
                     <button
                         onClick={() => setActiveTab('send')}
                         className={clsx(
-                            "relative flex-1  rounded-xl py-3 text-sm font-semibold transition-colors",
-                            activeTab === 'send' ? "text-primary-foreground dark:text-white" : "text-muted-foreground dark:bg-[#e33e38]  hover:text-foreground bg-gray-100"
+                            "relative cursor-pointer flex-1  rounded-xl py-3 text-sm font-semibold transition-colors",
+                            activeTab === 'send' ? "text-primary-foreground dark:text-white " : "text-[#e33e38] dark:bg-gray-100  bg-gray-100"
                         )}
                     >
                         {activeTab === 'send' && (
@@ -53,8 +53,8 @@ export default function Page() {
                     <button
                         onClick={() => setActiveTab('receive')}
                         className={clsx(
-                            "relative flex-1 rounded-xl py-3 text-sm font-semibold transition-colors",
-                            activeTab === 'receive' ? "text-primary-foreground dark:text-white" : "text-muted-foreground dark:bg-[#e33e38]/40 hover:text-foreground bg-gray-100"
+                            "relative cursor-pointer flex-1 rounded-xl py-3 text-sm font-semibold transition-colors",
+                            activeTab === 'receive' ? "text-primary-foreground dark:text-white" : "text-[#e33e38] bg-gray-100"
                         )}
                     >
                         {activeTab === 'receive' && (

@@ -58,10 +58,10 @@ export function Header() {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur py-2 supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-50 w-full border-b  backdrop-blur py-2 font-satoshi ">
             <div className="flex py-3 items-center mx-auto justify-between md:justify-end px-6">
                 <Link href="/" className="flex items-center gap-2 md:hidden">
-                    <Image src="/logo.png" alt="Logo" width={100} height={100} className='w-20 md:w-28 h-full' />
+                    <Image src="/logos/zendit-logo-removebg-preview.png" alt="Logo" width={100} height={100} className='w-10 h-auto md:w-28 h-full' />
                 </Link>
 
                 <div className="flex items-center gap-4">
