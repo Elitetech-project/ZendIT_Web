@@ -61,7 +61,7 @@ export function Header() {
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur py-2 supports-[backdrop-filter]:bg-background/60">
             <div className="flex py-3 items-center mx-auto justify-between md:justify-end px-6">
                 <Link href="/" className="flex items-center gap-2 md:hidden">
-                    <Image src="/logo.png" alt="Logo" width={100} height={100} className='w-28 h-full' />
+                    <Image src="/logo.png" alt="Logo" width={100} height={100} className='w-20 md:w-28 h-full' />
                 </Link>
 
                 <div className="flex items-center gap-4">
@@ -102,7 +102,7 @@ export function Header() {
                                                     type="button"
                                                     className="px-4 py-2 text-md bg-brand text-brand-foreground rounded-xl font-medium hover:opacity-90 transition-opacity font-satoshi "
                                                 >
-                                                    Connect Wallet --satoshi
+                                                    Connect Wallet
                                                 </button>
                                             );
                                         }
@@ -127,7 +127,7 @@ export function Header() {
                     {mounted && (
                         <button
                             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                            className="p-2 hover:bg-accent rounded-full transition-colors"
+                            className="p-2 hidden md:block cursor-pointer hover:bg-accent rounded-full transition-colors"
                             aria-label="Toggle theme"
                         >
                             {theme === 'dark' ? (
@@ -141,7 +141,7 @@ export function Header() {
                     <div className="relative">
                         <button
                             onClick={() => setShowNotifications(!showNotifications)}
-                            className="relative p-2 hover:bg-accent rounded-full transition-colors"
+                            className="cursor-pointer relative p-2 hover:bg-accent rounded-full transition-colors"
                         >
                             <Bell className="h-5 w-5 dark:text-white" />
                             {unreadCount > 0 && (
