@@ -108,7 +108,7 @@ export function SendView() {
                                 <div
                                     key={transaction.id}
                                     onClick={() => handleTransactionClick(transaction)}
-                                    className="flex items-center justify-between rounded-xl bg-secondary p-4 hover:bg-secondary/80 transition-colors cursor-pointer"
+                                    className="flex items-center justify-between rounded-xl bg-secondary/35 p-4 hover:bg-secondary/45 transition-colors cursor-pointer"
                                 >
                                     <div className="flex flex-col">
                                         <span className="text-sm font-medium dark:text-white">{transaction.name}</span>
@@ -139,7 +139,7 @@ export function SendView() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => setMode('initial')}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+                        className="flex cursor-pointer h-10 w-10 items-center justify-center rounded-full bg-secondary/50F hover:bg-secondary/80 transition-colors"
                     >
                         <ArrowLeft className="h-5 dark:text-white w-5" />
                     </button>
@@ -185,7 +185,7 @@ export function SendView() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => setMode('initial')}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 hover:bg-secondary/80 transition-colors"
                     >
                         <ArrowLeft className="h-5 dark:text-white w-5" />
                     </button>

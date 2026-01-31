@@ -101,7 +101,7 @@ export function ReceiveView() {
                     </div>
                     <button
                         type="submit"
-                        className="w-full mt-4 md:w-[50%] dark:text-white mx-auto rounded-xl bg-[#e33e38] py-3 font-semibold text-white hover:opacity-90 transition-opacity mt-2"
+                        className="w-full mt-4 md:w-[50%] dark:text-white mx-auto rounded-xl bg-[#e33e38] py-3 font-semibold text-white hover:opacity-90 transition-opacity cursor-pointer"
                     >
                         Save & Generate QR Code
                     </button>

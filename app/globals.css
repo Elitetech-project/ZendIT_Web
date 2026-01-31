@@ -133,3 +133,18 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none !important;
 }
+
+
+
+.notification-scrollbar::-webkit-scrollbar {
+  width: 1px; /* thin scrollbar */
+}
+
+.notification-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notification-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 10px;
+}
