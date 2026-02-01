@@ -58,10 +58,10 @@ export function Header() {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur py-2 supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-50 w-full border-b  backdrop-blur py-2 font-satoshi ">
             <div className="flex py-3 items-center mx-auto justify-between md:justify-end px-6">
                 <Link href="/" className="flex items-center gap-2 md:hidden">
-                    <Image src="/logo.png" alt="Logo" width={100} height={100} className='w-20 md:w-28 h-full' />
+                    <Image src="/logos/zendit-logo-removebg-preview.png" alt="Logo" width={100} height={100} className='w-10 h-auto md:w-28 h-full' />
                 </Link>
 
                 <div className="flex items-center gap-4">
@@ -181,7 +181,7 @@ export function Header() {
                                         </div>
 
                                         {/* Notifications List */}
-                                        <div className="max-h-96 overflow-y-auto">
+                                        <div className="max-h-96 overflow-y-auto notification-scrollbar">
                                             {notifications.length === 0 ? (
                                                 <div className="p-8 text-center text-muted-foreground">
                                                     <Bell className="h-12 w-12 mx-auto mb-2 opacity-20" />
@@ -203,7 +203,7 @@ export function Header() {
                                                                 <div className="flex items-start justify-between gap-2">
                                                                     <p className="font-medium text-sm">{notification.title}</p>
                                                                     {!notification.read && (
-                                                                        <span className="flex-shrink-0 h-2 w-2 rounded-full bg-primary" />
+                                                                        <span className="flex-shrink-0 h-2 w-2 rounded-full bg-red-700 " />
                                                                     )}
                                                                 </div>
                                                                 <p className="text-xs text-muted-foreground mt-1">

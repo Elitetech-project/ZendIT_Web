@@ -87,7 +87,7 @@
   --foreground: #ffffff;
 
   --card: #000000;
-  --card-foreground: #ffffff;
+  --card-foreground: #0a0808;
 
   --popover: #000000;
   --popover-foreground: #ffffff;
@@ -132,4 +132,19 @@
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none !important;
+}
+
+
+
+.notification-scrollbar::-webkit-scrollbar {
+  width: 1px; /* thin scrollbar */
+}
+
+.notification-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notification-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 10px;
 }

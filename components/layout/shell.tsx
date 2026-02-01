@@ -10,7 +10,7 @@ interface ShellProps {
 
 export function Shell({ children }: ShellProps) {
     return (
-        <div className="flex min-h-screen bg-background w-full">
+        <div className="flex min-h-screen  w-full">
             {/* Sidebar for Desktop */}
             <Sidebar className="hidden md:flex" />
 

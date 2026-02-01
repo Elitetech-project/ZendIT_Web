@@ -34,7 +34,7 @@ export default function HistoryPage() {
                             className="flex items-center justify-between rounded-xl bg-secondary/50 p-4 hover:bg-secondary/70 transition-colors cursor-pointer"
                         >
                             <div className="flex items-center gap-4">
-                                <div className={`flex h-10 w-10 items-center justify-center rounded-full ${tx.type === 'send' ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}`}>
+                                <div className={`flex h-10 w-10 items-center justify-center rounded-full ${tx.type === 'send' ? 'bg-blue-500/10 text-blue-500' : 'bg-green-500/10 text-green-500'}`}>
                                     {tx.type === 'send' ? <ArrowUpRight className="h-5 w-5" /> : <ArrowDownLeft className="h-5 w-5" />}
                                 </div>
                                 <div>

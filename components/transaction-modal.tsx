@@ -1,7 +1,8 @@
 'use client';
 
-import { X, CheckCircle, Clock, XCircle, Calendar, User, Building2, CreditCard, DollarSign } from 'lucide-react';
+import { X, CheckCircle, Clock, XCircle, Calendar, User, Building2, CreditCard, DollarSign, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from './ui/button';
 
 export type TransactionStatus = 'pending' | 'successful' | 'cancelled';
 
@@ -69,7 +70,7 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onCloseAction}
-                        className="fixed inset-0 bg-black/50 z-50"
+                        className="fixed inset-0 bg-white/12 backdrop-blur-sm z-50 font-satoshi "
                     />
 
                     {/* Modal */}
@@ -84,77 +85,77 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                             <div className="relative bg-gradient-to-br from-[#f17c37] to-[#e33e38] p-6 text-white">
                                 <button
                                     onClick={onCloseAction}
-                                    className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                                    className="absolute top-4 cursor-pointer right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
                                 >
                                     <X className="h-5 w-5" />
                                 </button>
                                 <h2 className="text-xl font-bold mb-2">Transaction Details</h2>
                                 <p className="text-sm opacity-90">Reference: {transaction.reference || `TXN${transaction.id}`}</p>
-                                <p className="text-sm opacity-90">Amount: {transaction.amount}</p>
+                                <p className="text-sm opacity-90">Transaction Hash: {"#########"}</p>
                             </div>
 
                             {/* Content */}
                             <div className="p-6 space-y-4">
                                 {/* Amount */}
-                                <div className="text-center flex items-center justify-center gap-3 py-2">
-                                    <p className="text-2xl font-bold mb-1">Amount</p>
+                                <div className=" flex items-center gap-3 py-2  ">
+                                    <p className="text-2xl font-bold mb-1">Amount:</p>
                                     <p className="text-2xl font-bold">{transaction.amount}</p>
                                 </div>
 
                                 {/* Details */}
                                 <div className="space-y-3 border-t pt-4">
                                     <div className={`flex items-center gap-3`}>
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                                            <StatusIcon className="h-5 w-5 text-muted-foreground" />
+                                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary">
+                                            <StatusIcon className="h-4 w-4 text-muted-foreground text-green-700 " />
                                         </div>
                                         <div className="flex-1">
-                                            <p className="text-xs text-muted-foreground">Recipient</p>
-                                            <span className={`font-semibold `}>
+                                            <p className="text-xs text-muted-foreground">Status</p>
+                                            <span className={`font-semibold text-sm `}>
                                                 {statusConfig.label}
                                             </span>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                                            <User className="h-5 w-5 text-muted-foreground" />
+                                        <div className="flex h-7 w-7  items-center justify-center rounded-full bg-secondary">
+                                            <User className="h-4 w-4 text-muted-foreground" />
                                         </div>
                                         <div className="flex-1">
                                             <p className="text-xs text-muted-foreground">Recipient</p>
-                                            <p className="font-medium">{transaction.name}</p>
+                                            <p className="font-medium text-sm">{transaction.name}</p>
                                         </div>
                                     </div>
 
                                     {transaction.bankName && (
                                         <div className="flex items-center gap-3">
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                                                <Building2 className="h-5 w-5 text-muted-foreground" />
+                                            <div className="flex h-7 w-7  items-center justify-center rounded-full bg-secondary">
+                                                <Building2 className="h-4 w-4 text-muted-foreground" />
                                             </div>
                                             <div className="flex-1">
                                                 <p className="text-xs text-muted-foreground">Bank</p>
-                                                <p className="font-medium">{transaction.bankName}</p>
+                                                <p className="font-medium text-sm">{transaction.bankName}</p>
                                             </div>
                                         </div>
                                     )}
 
                                     {transaction.accountNumber && (
                                         <div className="flex items-center gap-3">
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                                                <CreditCard className="h-5 w-5 text-muted-foreground" />
+                                            <div className="flex h-7 w-7  items-center justify-center rounded-full bg-secondary">
+                                                <CreditCard className="h-4 w-4 text-muted-foreground" />
                                             </div>
                                             <div className="flex-1">
                                                 <p className="text-xs text-muted-foreground">Account Number</p>
-                                                <p className="font-medium">{transaction.accountNumber}</p>
+                                                <p className="font-medium text-sm">{transaction.accountNumber}</p>
                                             </div>
                                         </div>
                                     )}
 
                                     <div className="flex items-center gap-3">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                                            <Calendar className="h-5 w-5 text-muted-foreground" />
+                                        <div className="flex h-7 w-7  items-center justify-center rounded-full bg-secondary">
+                                            <Calendar className="h-4 w-4 text-muted-foreground" />
                                         </div>
                                         <div className="flex-1">
                                             <p className="text-xs text-muted-foreground">Date & Time</p>
-                                            <p className="font-medium">
+                                            <p className="font-medium text-sm">
                                                 {transaction.date} {transaction.time && `• ${transaction.time}`}
                                             </p>
                                         </div>
@@ -162,16 +163,19 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
 
                                     {transaction.type && (
                                         <div className="flex items-center gap-3">
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                                                <DollarSign className="h-5 w-5 text-muted-foreground" />
+                                            <div className="flex h-7 w-7  items-center justify-center rounded-full bg-secondary">
+                                                <DollarSign className="h-4 w-4 text-muted-foreground" />
                                             </div>
                                             <div className="flex-1">
                                                 <p className="text-xs text-muted-foreground">Type</p>
-                                                <p className="font-medium capitalize">{transaction.type}</p>
+                                                <p className="font-medium capitalize text-sm">{transaction.type}</p>
                                             </div>
                                         </div>
                                     )}
                                 </div>
+
+
+                               <Button variant={"default"} className='cursor-pointer mt-3' > Download Reciept <Download size={16} /> </Button>
 
 
                             </div>

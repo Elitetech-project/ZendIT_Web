@@ -80,7 +80,7 @@ export function SendView() {
                     <div className="flex flex-col md:flex-row  gap-4 ">
                         <button
                             onClick={() => setMode('scan')}
-                            className="flex flex-col  items-center w-full  justify-center gap-3 rounded-2xl bg-[#f17c37] p-6 text-white hover:opacity-90 transition-opacity"
+                            className="flex flex-col cursor-pointer  items-center w-full  justify-center gap-3 rounded-2xl bg-[#f17c37] p-6 text-white hover:opacity-90 transition-opacity"
                         >
                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
                                 <QrCode className="h-6 w-6" />
@@ -91,7 +91,7 @@ export function SendView() {
 
                         <button
                             onClick={() => setMode('transfer')}
-                            className="flex flex-col items-center w-full justify-center gap-3 rounded-2xl bg-[#f15b35] p-6 text-white hover:opacity-90 transition-opacity"
+                            className="flex flex-col cursor-pointer items-center w-full justify-center gap-3 rounded-2xl bg-[#f15b35] p-6 text-white hover:opacity-90 transition-opacity"
                         >
                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
                                 <Building2 className="h-6 w-6" />
@@ -108,7 +108,7 @@ export function SendView() {
                                 <div
                                     key={transaction.id}
                                     onClick={() => handleTransactionClick(transaction)}
-                                    className="flex items-center justify-between rounded-xl bg-secondary p-4 hover:bg-secondary/80 transition-colors cursor-pointer"
+                                    className="flex items-center justify-between rounded-xl bg-secondary/35 p-4 hover:bg-secondary/45 transition-colors cursor-pointer"
                                 >
                                     <div className="flex flex-col">
                                         <span className="text-sm font-medium dark:text-white">{transaction.name}</span>
@@ -139,7 +139,7 @@ export function SendView() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => setMode('initial')}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+                        className="flex cursor-pointer h-10 w-10 items-center justify-center rounded-full bg-secondary/50F hover:bg-secondary/80 transition-colors"
                     >
                         <ArrowLeft className="h-5 dark:text-white w-5" />
                     </button>
@@ -185,7 +185,7 @@ export function SendView() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => setMode('initial')}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 hover:bg-secondary/80 transition-colors"
                     >
                         <ArrowLeft className="h-5 dark:text-white w-5" />
                     </button>

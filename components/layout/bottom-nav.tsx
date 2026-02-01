@@ -13,27 +13,27 @@ function cn(...inputs: ClassValue[]) {
 const navItems = [
     {
         title: 'Home',
-        href: '/',
+        href: '/dashboard',
         icon: Home,
     },
     {
         title: 'Utilities',
-        href: '/utilities',
+        href: '/dashboard/pages/utilities',
         icon: Zap,
     },
     {
         title: 'History',
-        href: '/history',
+        href: '/dashboard/pages/history',
         icon: Clock,
     },
     {
         title: 'Rewards',
-        href: '/rewards',
+        href: '/dashboard/pages/rewards',
         icon: Trophy,
     },
     {
         title: 'Settings',
-        href: '/settings',
+        href: '/dashboard/pages/settings',
         icon: Settings,
     },
 ];
