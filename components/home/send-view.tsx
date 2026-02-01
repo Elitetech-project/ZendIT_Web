@@ -80,7 +80,7 @@ export function SendView() {
                     <div className="flex flex-col md:flex-row  gap-4 ">
                         <button
                             onClick={() => setMode('scan')}
-                            className="flex flex-col items-center w-full justify-center gap-3 rounded-2xl bg-[#f17c37] dark:bg-orange-600/10 dark:border dark:border-orange-500/20 p-6 text-white hover:opacity-90 transition-opacity"
+                            className="flex flex-col  items-center w-full  justify-center gap-3 rounded-2xl bg-[#f17c37] p-6 text-white hover:opacity-90 transition-opacity"
                         >
                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
                                 <QrCode className="h-6 w-6" />
@@ -91,7 +91,7 @@ export function SendView() {
 
                         <button
                             onClick={() => setMode('transfer')}
-                            className="flex flex-col items-center w-full justify-center gap-3 rounded-2xl bg-[#f15b35] dark:bg-red-600/10 dark:border dark:border-red-500/20 p-6 text-white hover:opacity-90 transition-opacity"
+                            className="flex flex-col items-center w-full justify-center gap-3 rounded-2xl bg-[#f15b35] p-6 text-white hover:opacity-90 transition-opacity"
                         >
                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
                                 <Building2 className="h-6 w-6" />

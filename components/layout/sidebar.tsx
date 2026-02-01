@@ -14,27 +14,27 @@ function cn(...inputs: ClassValue[]) {
 const navItems = [
     {
         title: 'Home',
-        href: '/',
+        href: '/dashboard',
         icon: Home,
     },
     {
         title: 'Utilities',
-        href: '/utilities',
+        href: '/dashboard/pages/utilities',
         icon: Zap,
     },
     {
         title: 'History',
-        href: '/history',
+        href: '/dashboard/pages/history',
         icon: Clock,
     },
     {
         title: 'Rewards',
-        href: '/rewards',
+        href: '/dashboard/pages/rewards',
         icon: Trophy,
     },
     {
         title: 'Settings',
-        href: '/settings',
+        href: '/dashboard/pages/settings',
         icon: Settings,
     },
 ];
@@ -81,8 +81,8 @@ export function Sidebar({ className }: SidebarProps) {
             </nav>
             <div className="border-t p-4">
                 {/* Optional: User profile or help link could go here */}
-                <div className="rounded-2xl bg-secondary/50 p-4">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 font-inter ">Support --inter</p>
+                <div className="rounded-2xl bg-secondary/50 p-4 font-satoshi ">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 font-roboto ">Support</p>
                     <Link href="#" className="text-sm text-foreground hover:underline">Help Center</Link>
                 </div>
             </div>
