@@ -28,7 +28,7 @@ export default function LoginView() {
 
             <div className="w-full h-full absolute inset-0 flex items-center justify-center px-3 p-4  z-20" >
 
-                <form className="w-full text-[#333333] max-w-2xl h-fit flex flex-col items-center gap-7 bg-white px-5 py-8 rounded-xl "  >
+                <form className="w-full text-[#333333] max-w-xl h-fit flex flex-col items-center gap-7 bg-white px-5 py-8 rounded-xl "  >
 
 
                     <div className="w-fit flex flex-col gap-2 items-center justify-center text-center" >

@@ -69,11 +69,11 @@ export function Sidebar({ className }: SidebarProps) {
                                 "flex font-satoshi items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
                                 isActive
                                     ? "bg-brand/10 text-brand shadow-sm"
-                                    : "text-white hover:bg-brand/5 hover:text-brand"
+                                    : "text-black dark:text-white hover:bg-brand/5 hover:text-brand"
                             )}
                         >
 
-                            <Icon className={cn("h-5 w-5", isActive && "fill-current")} />
+                            <Icon className={cn("h-5 w-5", isActive && "stroke-current")} />
                             <span>{item.title}</span>
                         </Link>
                     );

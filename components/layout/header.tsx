@@ -181,7 +181,7 @@ export function Header() {
                                         </div>
 
                                         {/* Notifications List */}
-                                        <div className="max-h-96 overflow-y-auto">
+                                        <div className="max-h-96 overflow-y-auto notification-scrollbar">
                                             {notifications.length === 0 ? (
                                                 <div className="p-8 text-center text-muted-foreground">
                                                     <Bell className="h-12 w-12 mx-auto mb-2 opacity-20" />
@@ -203,7 +203,7 @@ export function Header() {
                                                                 <div className="flex items-start justify-between gap-2">
                                                                     <p className="font-medium text-sm">{notification.title}</p>
                                                                     {!notification.read && (
-                                                                        <span className="flex-shrink-0 h-2 w-2 rounded-full bg-primary" />
+                                                                        <span className="flex-shrink-0 h-2 w-2 rounded-full bg-red-700 " />
                                                                     )}
                                                                 </div>
                                                                 <p className="text-xs text-muted-foreground mt-1">
