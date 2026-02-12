@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -58,7 +59,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${roboto.variable} ${inter.variable} ${satoshi.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+        </Providers>
         <Toaster position="bottom-right" reverseOrder={false} />
       </body>
     </html>
