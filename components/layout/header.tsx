@@ -7,6 +7,7 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import ThemeBtn from '../ui/ThemeBtn';
 
 interface Notification {
     id: number;
@@ -18,8 +19,6 @@ interface Notification {
 }
 
 export function Header() {
-    const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
     const [notifications, setNotifications] = useState<Notification[]>([
         { id: 1, title: 'Payment Received', message: 'You received $120.00 from User 2', time: '5m ago', type: 'success', read: false },
@@ -29,10 +28,6 @@ export function Header() {
     ]);
 
     const unreadCount = notifications.filter(n => !n.read).length;
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     const markAsRead = (id: number) => {
         setNotifications(notifications.map(n =>
@@ -100,7 +95,7 @@ export function Header() {
                                                 <button
                                                     onClick={openConnectModal}
                                                     type="button"
-                                                    className="px-4 py-2 text-md bg-brand text-brand-foreground rounded-xl font-medium hover:opacity-90 transition-opacity font-satoshi "
+                                                    className="px-4 py-2 text-md bg-brand text-brand-foreground rounded-xl font-medium hover:opacity-90 transition-opacity font-satoshi cursor-pointer "
                                                 >
                                                     Connect Wallet
                                                 </button>
@@ -124,19 +119,7 @@ export function Header() {
                         }}
                     </ConnectButton.Custom>
 
-                    {mounted && (
-                        <button
-                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                            className="p-2 hidden md:block cursor-pointer hover:bg-accent rounded-full transition-colors"
-                            aria-label="Toggle theme"
-                        >
-                            {theme === 'dark' ? (
-                                <Sun className="h-5 w-5 text-yellow-500" />
-                            ) : (
-                                <Moon className="h-5 w-5 text-slate-700" />
-                            )}
-                        </button>
-                    )}
+<ThemeBtn/>
 
                     <div className="relative">
                         <button
