@@ -5,7 +5,7 @@ import { featuresData } from "@/data/featuresData";
 
 export default function Features() {
     return (
-        <section className="w-full h-fit flex items-center justify-center flex-col py-10 px-[8%] md:px-[5%] gap-18 font-satoshi relative  " >
+        <section className="w-full h-fit flex items-center justify-center flex-col py-20 md:py-28 px-[8%] md:px-[5%] gap-18 font-satoshi relative  " >
 
             <div className="absolute inset-0  overflow-hidden  z-10 " >
                 <video
@@ -19,7 +19,7 @@ export default function Features() {
                 </video>
             </div>
 
-            <div className="bg-[#000000B2] absolute inset-0 h-full w-full z-10 " />
+            <div className="bg-[#000000]/85 absolute inset-0 h-full w-full z-10 " />
 
             <div className=" flex flex-col gap-4 items-center justify-center text-center z-10 " >
                 <h2 className="font-roboto text-[#FE703B] font-bold text-lg md:text-2xl " >Features</h2>
@@ -29,7 +29,7 @@ export default function Features() {
 
 
 
-            <div className="w-full z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center justify-center justify-items-center gap-8  " >
+            <div className="w-full max-w-306.25 z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center justify-center justify-items-center gap-8  " >
 
                 {
                     featuresData.map((feature, i) => {
