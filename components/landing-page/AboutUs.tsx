@@ -6,7 +6,7 @@ import SimplicityIcon from "../icons/SimplicityIcon";
 
 export default function AboutUs() {
     return (
-        <section className="w-full h-fit flex items-center justify-center flex-col py-16 px-[8%] md:px-[5%] gap-18 font-satoshi relative">
+        <section id="about" className="w-full h-fit flex items-center justify-center flex-col py-16 px-[8%] md:px-[5%] gap-18 font-satoshi relative">
 
             <div className="absolute inset-0  overflow-hidden  z-10 " >
                 <video

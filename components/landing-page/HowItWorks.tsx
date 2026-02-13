@@ -4,7 +4,7 @@ import { steps } from "@/data/HowItWorksData";
 
 export default function HowItWorks() {
     return (
-        <section className="w-full h-fit flex items-center justify-center flex-col py-20 px-[5%] gap-18 font-satoshi  " >
+        <section id="how-it-works" className="w-full h-fit flex items-center justify-center flex-col py-20 px-[5%] gap-18 font-satoshi  " >
 
 
             <div className=" flex flex-col gap-4 items-center justify-center text-center z-10 " >

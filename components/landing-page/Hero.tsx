@@ -8,6 +8,7 @@ export default function Hero() {
     return (
         <section className="w-full min-h-[120vh] md:min-h-screen relative font-satoshi  " >
 
+            {/* ---------------------------- Background GIF ---------------------  */}
             <div className="absolute inset-0  overflow-hidden  z-0 " >
                 <video
                     src="/GIFs/PinDown.io_@Dafi20000_1770796636.mp4"
@@ -20,7 +21,7 @@ export default function Hero() {
                 </video>
             </div>
 
-
+            {/* ------------------------------- overlay ---------------------- */}
             <div className="bg-[#000000]/75 absolute inset-0 h-full w-full z-10 " />
 
 
@@ -28,8 +29,7 @@ export default function Hero() {
 
             <div className="w-full h-fit flex flex-col md:flex-row items-start justify-center z-20 absolute top-0 left-0 px-[3%] lg:px-[6%]  " >
 
-                <div className=" w-full h-full md:basis-1/2 flex flex-col items-start justify-between gap-18 md:gap-20  py-7 px-1 " >
-
+                <div className=" w-full max-w-2xl h-full  md:basis-1/2 flex flex-col items-start justify-between gap-18 md:gap-20  py-8 px-1 " >
 
                     <div className=" bg-[#F57D2E1A] p-2.5 rounded-[8px] border border-[#F57D2E36] text-sm md:text-base font-normal text-[#FE703B] " >
                         No Crypto Maths Required
@@ -70,7 +70,7 @@ export default function Hero() {
 
 
                 {/* The image  */}
-                <div className=" w-full h-full my-auto md:basis-1/2  flex items-center justify-center" >
+                <div className=" w-full h-full my-auto md:basis-1/2  flex items-center justify-center  " >
                     <div className="w-full  h-fit relative" >
                         <Image src={"/homepage-images/phone.png"} alt="image" height={1000} width={1000} className=" w-full h-auto  " />
 
@@ -84,7 +84,7 @@ export default function Hero() {
                             </div>
                         </div>
 
-                          <div className="absolute top-27 md:top-32 left-[70%] md:left-[60%] z-30 w-28.25 h-auto bg-[#FFFFFF1A] rounded-[8px] text-[#FFFFFF] font-bold text-[10px] py-4 px-2 flex  flex-col  gap-2 border border-white/40 " >
+                        <div className="absolute top-27 md:top-32 left-[70%] md:left-[60%] z-30 w-28.25 h-auto bg-[#FFFFFF1A] rounded-[8px] text-[#FFFFFF] font-bold text-[10px] py-4 px-2 flex  flex-col  gap-2 border border-white/40 " >
                             <span className=" bg-white size-7 rounded-[8px] flex items-center justify-center  " >
                                 <Image src={"/GIFs/hundred.gif"} alt="gif" height={20} width={20} />
                             </span>

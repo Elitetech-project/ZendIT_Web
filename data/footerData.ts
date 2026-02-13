@@ -4,11 +4,11 @@
 export const productData = [
     {
         label: "Features",
-        path: "#",
+        path: "#features",
     },
     {
         label: "Pricing",
-        path: "#",
+        path: "#pricing",
     },
     {
         label: "Security",
