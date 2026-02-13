@@ -1,9 +1,13 @@
-import { featuresData } from "@/data/featuresData";
+"use client"
 
+import { featuresData } from "@/data/featuresData";
+import { motion } from "framer-motion"
 
 
 
 export default function Features() {
+
+
     return (
         <section className="w-full h-fit flex items-center justify-center flex-col py-20 md:py-28 px-[8%] md:px-[5%] gap-18 font-satoshi relative  " >
 
@@ -37,7 +41,12 @@ export default function Features() {
                         const Icon = feature.icon
 
                         return (
-                            <div key={i} className=" w-full h-full flex flex-col items-start gap-4 rounded-[8px] bg-[#FFFFFF12] border border-[#FFFFFF5C] hover:border-[#FE703B] backdrop-blur-[27px] py-5 px-4 pb-16 duration-200 ease-in-out transition-all " >
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                viewport={{ once: true, amount: 1}}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                key={i} className=" w-full h-full flex flex-col items-start gap-4 rounded-[8px] bg-[#FFFFFF12] border border-[#FFFFFF5C] hover:border-[#FE703B] backdrop-blur-[27px] py-5 px-4 pb-16 duration-200 ease-in-out transition-all " >
                                 <span className="size-10 flex items-center justify-center py-0.5 px-0.5 bg-white text-[#FE703B] rounded-[8px] " >
                                     <Icon className=" w-5 h-auto  " />
                                 </span>
@@ -47,7 +56,7 @@ export default function Features() {
                                     <p className=" font-satoshi text-[#CCCCCC] font-normal text-sm md:text-base  " >{feature.content} </p>
                                 </div>
 
-                            </div>
+                            </motion.div>
                         )
                     })
                 }

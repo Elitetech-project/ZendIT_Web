@@ -23,7 +23,7 @@ export default function ReadySection() {
     }, [])
 
     return (
-        <section className=" w-full px-[4%]  py-16 pb-24 flex items-center justify-center  " >
+        <section className=" w-full px-[4%]  py-16 pb-36 flex items-center justify-center  " >
 
 
 
