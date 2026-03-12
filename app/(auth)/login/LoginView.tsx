@@ -1,19 +1,63 @@
 "use client"
 
 import { handleChange } from "@/lib/utils"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, Loader2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
-
-
-
+import React, { useState } from "react"
+import toast from "react-hot-toast"
+import { supabase } from "@/lib/supabaseClient"
+import { connectSupabaseToWeb3Auth } from "@/lib/web3auth"
 export default function LoginView() {
     const [showPassword, setShowPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [formValues, setFormValues] = useState({
         email: "",
         password: ""
     })
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        if (!formValues.email.trim() || !formValues.password.trim()) {
+            return toast.error("Please enter email and password")
+        }
+
+        setIsLoading(true)
+        const toastId = toast.loading("Logging into your dashboard...")
+
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: formValues.email,
+                password: formValues.password,
+            })
+
+            if (error) {
+                toast.dismiss(toastId)
+                setIsLoading(false)
+                return toast.error(error.message)
+            }
+
+            if (data.session) {
+                try {
+                    // Background connection without distracting toasts
+                    await connectSupabaseToWeb3Auth(data.session.access_token)
+                    toast.success("Login Successful!", { id: toastId })
+
+                    // Redirect user to dashboard
+                    setTimeout(() => {
+                        window.location.href = "/dashboard"
+                    }, 1500)
+                } catch (err) {
+                    toast.error("Dashboard connection failed", { id: toastId })
+                    setIsLoading(false)
+                }
+            }
+        } catch (err) {
+            toast.error("An unexpected error occurred", { id: toastId })
+            setIsLoading(false)
+        }
+    }
 
 
     return (
@@ -28,7 +72,7 @@ export default function LoginView() {
 
             <div className="w-full h-full absolute inset-0 flex items-center justify-center px-3 p-4  z-20" >
 
-                <form className="w-full text-[#333333] max-w-xl h-fit flex flex-col items-center gap-7 bg-white px-5 py-8 rounded-xl "  >
+                <form onSubmit={handleSubmit} className="w-full text-[#333333] max-w-xl h-fit flex flex-col items-center gap-7 bg-white px-5 py-8 rounded-xl "  >
 
 
                     <div className="w-fit flex flex-col gap-2 items-center justify-center text-center" >
@@ -78,12 +122,14 @@ export default function LoginView() {
 
 
                         <button
+                            type="submit"
+                            disabled={isLoading}
                             className={
-                                `w-full flex items-center justify-center  rounded-[100px] cursor-pointer py-3 text-sm font-semibold text-primary-foreground dark:text-white  dark:bg-[#e33e38]  hover:text-foreground bg-gray-100 hover:brightness-75 transition-all duration-200 ease-in-out `
+                                `w-full flex items-center justify-center gap-2 rounded-[100px] cursor-pointer py-3 text-sm font-semibold text-primary-foreground dark:text-white dark:bg-[#e33e38] hover:text-foreground bg-gray-100 hover:brightness-75 transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed`
                             }
                         >
-
-                            Sign up
+                            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+                            {isLoading ? "Logging in..." : "Log in"}
                         </button>
 
 

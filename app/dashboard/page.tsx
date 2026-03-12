@@ -7,19 +7,62 @@ import { SendView } from '@/components/home/send-view';
 import { ReceiveView } from '@/components/home/receive-view';
 import { clsx } from 'clsx';
 import { Button } from '@/components/ui/button';
+import { useWeb3Auth } from '@/hooks/useWeb3Auth';
 
 export default function Page() {
     const [activeTab, setActiveTab] = useState<'send' | 'receive'>('send');
+    const { user, balance, address, isLoading, copyAddress } = useWeb3Auth();
 
     return (
         <Shell>
             <div className="flex flex-col gap-6 font-satoshi">
-                {/* Balance Card */}
-                <div className="relative overflow-hidden rounded-xl bg-[#f17c37] p-6 text-white shadow-lg flex items-center justify-between ">
-                    <div className="relative z-10">
-                        <span className="text-sm font-medium opacity-80 font-roboto">Total Balance </span>
-                        <h2 className="mt-1 text-4xl font-bold font-roboto ">0.00 FLR</h2>
+                <div className="flex flex-col gap-2">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex flex-col">
+                            <h1 className="text-3xl font-bold text-foreground tracking-tight">
+                                Welcome, {user?.user_metadata?.username || user?.email?.split('@')[0] || "User"}
+                            </h1>
+                            <div className="flex items-center gap-2 mt-1 blur-none">
+                                <span className="text-sm text-muted-foreground font-medium">Your non-custodial wallet:</span>
+                                {address ? (
+                                    <button
+                                        onClick={copyAddress}
+                                        className="text-sm font-mono text-primary font-bold hover:underline transition-colors cursor-pointer decoration-dotted underline-offset-4"
+                                        title="Click to copy address"
+                                    >
+                                        {`${address.slice(0, 8)}...${address.slice(-6)}`}
+                                    </button>
+                                ) : (
+                                    <div className="h-4 w-32 animate-pulse bg-muted rounded mt-1" />
+                                )}
+                            </div>
+                        </div>
                     </div>
+                </div>
+
+                {/* Balance Card */}
+                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#e33e38] via-[#f17c37] to-[#f15b35] p-8 text-white shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="relative z-10">
+                        <span className="text-xs font-bold opacity-90 font-roboto uppercase tracking-[0.2em] mb-2 block">Total Portfolio Balance </span>
+                        <div className="flex items-baseline gap-2">
+                            {isLoading ? (
+                                <div className="h-12 w-48 bg-white/20 animate-pulse rounded-xl mb-1" />
+                            ) : (
+                                <h2 className="text-5xl font-black font-roboto tracking-tighter">
+                                    {balance}
+                                </h2>
+                            )}
+                            {!isLoading && <span className="text-2xl font-bold opacity-80">FLR</span>}
+                        </div>
+                        <div className="mt-2 text-sm font-medium opacity-80">
+                            {isLoading ? (
+                                <div className="h-4 w-24 bg-white/20 animate-pulse rounded-lg" />
+                            ) : (
+                                `≈ $${(parseFloat(balance) * 0.0245).toFixed(2)} USD`
+                            )}
+                        </div>
+                    </div>
+
 
 
                     <Button variant={"default"} className='cursor-pointer bg-white text-black ' >Fund Wallet</Button>

@@ -62,7 +62,43 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
-        <Toaster position="bottom-right" reverseOrder={false} />
+        <Toaster
+          position="bottom-right"
+          reverseOrder={false}
+          toastOptions={{
+            style: {
+              background: '#1a1a1a',
+              color: '#ffffff',
+              borderRadius: '16px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              fontFamily: 'var(--font-satoshi), sans-serif',
+              fontSize: '14px',
+              fontWeight: '500',
+              padding: '12px 20px',
+            },
+            success: {
+              iconTheme: {
+                primary: '#e33e38',
+                secondary: '#ffffff',
+              },
+              style: {
+                border: '1px solid rgba(227, 62, 56, 0.3)',
+              }
+            },
+            error: {
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#ffffff',
+              },
+            },
+            loading: {
+              iconTheme: {
+                primary: '#e33e38',
+                secondary: '#ffffff',
+              }
+            }
+          }}
+        />
       </body>
     </html>
   );

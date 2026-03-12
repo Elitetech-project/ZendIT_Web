@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Bell, X, CheckCircle, Clock, XCircle, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemeBtn from '../ui/ThemeBtn';
+import { useWeb3Auth } from '@/hooks/useWeb3Auth';
 
 interface Notification {
     id: number;
@@ -19,6 +19,7 @@ interface Notification {
 }
 
 export function Header() {
+    const { user, address, copyAddress } = useWeb3Auth();
     const [showNotifications, setShowNotifications] = useState(false);
     const [notifications, setNotifications] = useState<Notification[]>([
         { id: 1, title: 'Payment Received', message: 'You received $120.00 from User 2', time: '5m ago', type: 'success', read: false },
@@ -56,70 +57,27 @@ export function Header() {
         <header className="sticky top-0 z-50 w-full border-b  backdrop-blur py-2 font-satoshi ">
             <div className="flex py-3 items-center mx-auto justify-between md:justify-end px-6">
                 <Link href="/" className="flex items-center gap-2 md:hidden">
-                    <Image src="/logos/zendit-logo-removebg-preview.png" alt="Logo" width={100} height={100} className='w-10 h-auto md:w-28 h-full' />
+                    <Image src="/logos/Zendit_logo.png" alt="Logo" width={100} height={100} className='w-10 h-auto md:w-28 h-full' />
                 </Link>
 
                 <div className="flex items-center gap-4">
-                    <ConnectButton.Custom>
-                        {({
-                            account,
-                            chain,
-                            openAccountModal,
-                            openChainModal,
-                            openConnectModal,
-                            authenticationStatus,
-                            mounted,
-                        }) => {
-                            const ready = mounted && authenticationStatus !== 'loading';
-                            const connected =
-                                ready &&
-                                account &&
-                                chain &&
-                                (!authenticationStatus ||
-                                    authenticationStatus === 'authenticated');
+                    {/* Welcome message and Wallet Address display */}
+                    <div className="flex flex-col items-end gap-0.5">
+                        
+                        {address ? (
+                            <button
+                                onClick={copyAddress}
+                                title="Click to copy address"
+                                className="text-[10px] md:text-xs font-mono bg-muted py-1 px-2 rounded-lg cursor-pointer hover:bg-primary/10 hover:text-primary transition-all uppercase tracking-wider text-muted-foreground border border-transparent hover:border-primary/20"
+                            >
+                                {`${address.slice(0, 6)}...${address.slice(-4)}`}
+                            </button>
+                        ) : (
+                            <div className="h-4 w-24 animate-pulse bg-muted rounded-md" />
+                        )}
+                    </div>
 
-                            return (
-                                <div
-                                    {...(!ready && {
-                                        'aria-hidden': true,
-                                        'style': {
-                                            opacity: 0,
-                                            pointerEvents: 'none',
-                                            userSelect: 'none',
-                                        },
-                                    })}
-                                >
-                                    {(() => {
-                                        if (!connected) {
-                                            return (
-                                                <button
-                                                    onClick={openConnectModal}
-                                                    type="button"
-                                                    className="px-4 py-2 text-md bg-brand text-brand-foreground rounded-xl font-medium hover:opacity-90 transition-opacity font-satoshi cursor-pointer "
-                                                >
-                                                    Connect Wallet
-                                                </button>
-                                            );
-                                        }
-
-                                        return (
-                                            <button
-                                                onClick={openAccountModal}
-                                                type="button"
-                                                className="px-4 py-2 bg-secondary text-foreground rounded-xl font-medium hover:bg-secondary/80 transition-colors"
-                                            >
-                                                {account.displayName
-                                                    ? account.displayName
-                                                    : `${account.address.slice(0, 6)}...${account.address.slice(-4)}`}
-                                            </button>
-                                        );
-                                    })()}
-                                </div>
-                            );
-                        }}
-                    </ConnectButton.Custom>
-
-<ThemeBtn/>
+                    <ThemeBtn />
 
                     <div className="relative">
                         <button
@@ -207,6 +165,7 @@ export function Header() {
                         </AnimatePresence>
                     </div>
                 </div>
+
             </div>
         </header>
     );

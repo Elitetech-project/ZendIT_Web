@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Home, Zap, Clock, Trophy, Settings } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Home, Zap, Clock, Trophy, Settings, LogOut } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import Image from 'next/image';
+import { useWeb3Auth } from '@/hooks/useWeb3Auth';
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -45,6 +46,13 @@ interface SidebarProps {
 
 export function Sidebar({ className }: SidebarProps) {
     const pathname = usePathname();
+    const router = useRouter();
+    const { signOut } = useWeb3Auth();
+
+    const handleSignOut = async () => {
+        await signOut();
+        router.push('/login');
+    };
 
     return (
         <aside className={cn(
@@ -85,6 +93,13 @@ export function Sidebar({ className }: SidebarProps) {
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 font-roboto ">Support</p>
                     <Link href="#" className="text-sm text-foreground hover:underline">Help Center</Link>
                 </div>
+                <button
+                    onClick={handleSignOut}
+                    className="mt-4 flex w-full font-satoshi items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all cursor-pointer"
+                >
+                    <LogOut className="h-5 w-5" />
+                    <span>Sign Out</span>
+                </button>
             </div>
         </aside>
     );

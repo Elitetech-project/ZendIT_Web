@@ -1,17 +1,19 @@
 "use client"
 
 import { handleChange } from "@/lib/utils"
-import { fePointLight, sub } from "framer-motion/client"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, Loader2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import React, { useState } from "react"
 import toast from "react-hot-toast"
+import { supabase } from "@/lib/supabaseClient"
+import { connectSupabaseToWeb3Auth } from "@/lib/web3auth"
 
 
 
 export default function SignUpView() {
     const [showPassword, setShowPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [formValues, setFormValues] = useState({
         username: "",
         email: "",
@@ -39,7 +41,52 @@ export default function SignUpView() {
             return toast.error("Passwords do not match!")
         }
 
+        setIsLoading(true);
+        const toastId = toast.loading("Creating your dashboard...");
 
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email: formValues.email,
+                password: formValues.password,
+                options: {
+                    data: {
+                        username: formValues.username,
+                        phone_number: formValues.phoneNumber,
+                    }
+                }
+            });
+
+            if (error) {
+                console.error("Supabase Error:", error);
+                toast.dismiss(toastId);
+                setIsLoading(false);
+                return toast.error(error.message);
+            }
+
+            console.log("Supabase Success Data:", data);
+
+            if (data.session) {
+                try {
+                    // Background connection without distracting toasts
+                    await connectSupabaseToWeb3Auth(data.session.access_token);
+                    toast.success("Success! Dashboard is ready.", { id: toastId });
+
+                    // Redirect user to dashboard after short delay to show success
+                    setTimeout(() => {
+                        window.location.href = "/dashboard";
+                    }, 1500);
+                } catch (err) {
+                    toast.error("Account created, but dashboard connection failed", { id: toastId });
+                    setIsLoading(false);
+                }
+            } else {
+                toast.success("Account created! Please check your email to confirm.", { id: toastId });
+                setIsLoading(false);
+            }
+        } catch (err) {
+            toast.error("An unexpected error occurred", { id: toastId });
+            setIsLoading(false);
+        }
     }
 
 
@@ -147,12 +194,14 @@ export default function SignUpView() {
 
 
                         <button
+                            type="submit"
+                            disabled={isLoading}
                             className={
-                                `w-full flex items-center justify-center  rounded-[100px] cursor-pointer py-3 text-sm font-semibold text-primary-foreground dark:text-white  dark:bg-[#e33e38]  hover:text-foreground bg-gray-100 hover:brightness-75 transition-all duration-200 ease-in-out `
+                                `w-full flex items-center justify-center gap-2 rounded-[100px] cursor-pointer py-3 text-sm font-semibold text-primary-foreground dark:text-white dark:bg-[#e33e38] hover:text-foreground bg-gray-100 hover:brightness-75 transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed`
                             }
                         >
-
-                            Sign up
+                            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+                            {isLoading ? "Signing up..." : "Sign up"}
                         </button>
 
 
