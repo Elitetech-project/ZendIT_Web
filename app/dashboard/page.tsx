@@ -20,10 +20,13 @@ export default function Page() {
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex flex-col">
                             <h1 className="text-3xl font-bold text-foreground tracking-tight">
-                                Welcome, {user?.user_metadata?.username || user?.email?.split('@')[0] || "User"}
+                                Welcome, {(() => {
+                                    const name = user?.user_metadata?.username || user?.email?.split('@')[0] || "User";
+                                    return name.length > 12 ? `${name.substring(0, 12)}...` : name;
+                                })()}
                             </h1>
                             <div className="flex items-center gap-2 mt-1 blur-none">
-                                <span className="text-sm text-muted-foreground font-medium">Your non-custodial wallet:</span>
+                                <span className="text-sm text-muted-foreground font-medium">Your wallet:</span>
                                 {address ? (
                                     <button
                                         onClick={copyAddress}
