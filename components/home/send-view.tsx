@@ -30,6 +30,8 @@ export function SendView() {
     const [isQuoting, setIsQuoting] = useState(false);
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [scannedData, setScannedData] = useState<string | null>(null);
+    const [accountName, setAccountName] = useState<string>('');
 
     const handleScan = (result: any) => {
         if (result && result[0]?.rawValue) {
