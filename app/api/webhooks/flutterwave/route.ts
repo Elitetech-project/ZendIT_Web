@@ -14,49 +14,54 @@ const supabase = createClient(
 export async function POST(request: Request) {
     try {
         // 1. Verify Secret Hash (Proves it actually came from Flutterwave)
-        const signature = request.headers.get('verif-hash');
+        const signature = request.headers.get('verif-hash') || request.headers.get('Verif-Hash');
         const secretHash = process.env.FLW_SECRET_HASH;
 
-        // Note: For live, you MUST set FLW_SECRET_HASH in .env.local and Flutterwave dashboard
         if (!signature || signature !== secretHash) {
-            console.warn('Unauthorized Webhook attempt blocked - Signature mismatch.');
+            console.warn('--- [FLW WEBHOOK] Unauthorized ---', { received: signature, expected: secretHash ? 'HAS_COORD' : 'MISSING_ENV' });
             return new Response('Unauthorized', { status: 401 });
         }
 
         const payload = await request.json();
-        const event = payload.event;
-        const flwId = payload.data?.id;
-        const flwStatus = payload.data?.status;
+        console.log('--- [FLW WEBHOOK] Payload ---', JSON.stringify(payload, null, 2));
 
-        console.log(`--- [WEBHOOK] Received ${event} for ID ${flwId} ---`);
+        const { event, data } = payload;
 
-        // 2. Handle Final Transfer Settlement
+        // 2. Handle Transfer Completion
         if (event === 'transfer.completed') {
-            // Map Flutterwave status to our local status
-            // Flutterwave uses 'SUCCESSFUL' or 'FAILED'
-            const mappedStatus = flwStatus === 'SUCCESSFUL' ? 'completed' : 'failed';
+            const flutterwaveId = data.id.toString();
+            const txRef = data.tx_ref; // Expected: ZENDIT-TX-[transactionId]
+            const flwStatus = data.status; // SUCCESSFUL or FAILED
 
-            const { error } = await supabase
+            console.log(`--- [FLW WEBHOOK] Processing Ref: ${txRef} (FLW ID: ${flutterwaveId}) with status ${flwStatus} ---`);
+
+            const finalStatus = flwStatus === 'SUCCESSFUL' ? 'completed' : 'failed';
+
+            // Extract our UUID from the tx_ref (ZENDIT-TX-uuid)
+            const transactionId = txRef?.replace('ZENDIT-TX-', '');
+
+            // 3. Update Supabase (Matching by either FLW ID OR our internal ID)
+            // Use an OR filter to be 100% safe
+            const { data: updateData, error: updateError } = await supabase
                 .from('transactions')
                 .update({
-                    status: mappedStatus,
+                    status: finalStatus,
                     updated_at: new Date().toISOString()
                 })
-                .eq('flutterwave_id', String(flwId));
+                .or(`flutterwave_id.eq.${flutterwaveId},id.eq.${transactionId}`);
 
-            if (error) {
-                console.error('Database update failed during webhook:', error);
-                throw error;
+            if (updateError) {
+                console.error('--- [FLW WEBHOOK] DB Update Error ---', updateError);
+                return NextResponse.json({ success: false, error: updateError.message }, { status: 500 });
             }
 
-            console.log(`✅ Webhook Success: Transaction ${flwId} updated to ${mappedStatus}`);
+            console.log('--- [FLW WEBHOOK] Success: Status synced to DB ---', updateData);
             return NextResponse.json({ success: true, message: 'Status synced' });
         }
 
-        return NextResponse.json({ message: 'Event ignored' });
-
+        return NextResponse.json({ success: true, message: 'Event ignored' });
     } catch (error: any) {
-        console.error('Webhook processing failed:', error.message);
-        return NextResponse.json({ error: 'Internal logic error' }, { status: 500 });
+        console.error('--- [FLW WEBHOOK] Fatal Error ---', error);
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }
