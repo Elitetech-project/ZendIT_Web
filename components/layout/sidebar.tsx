@@ -20,22 +20,22 @@ const navItems = [
     },
     {
         title: 'Utilities',
-        href: '/dashboard/pages/utilities',
+        href: '/dashboard/utilities',
         icon: Zap,
     },
     {
         title: 'History',
-        href: '/dashboard/pages/history',
+        href: '/dashboard/history',
         icon: Clock,
     },
     {
         title: 'Rewards',
-        href: '/dashboard/pages/rewards',
+        href: '/dashboard/rewards',
         icon: Trophy,
     },
     {
         title: 'Settings',
-        href: '/dashboard/pages/settings',
+        href: '/dashboard/settings',
         icon: Settings,
     },
 ];

@@ -9,8 +9,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ThemeBtn from '../ui/ThemeBtn';
 import { useWeb3Auth } from '@/hooks/useWeb3Auth';
 
+import { supabase } from '@/lib/supabaseClient';
+import { formatDistanceToNow } from 'date-fns';
+
 interface Notification {
-    id: number;
+    id: string | number;
     title: string;
     message: string;
     time: string;
@@ -21,16 +24,65 @@ interface Notification {
 export function Header() {
     const { user, address, copyAddress } = useWeb3Auth();
     const [showNotifications, setShowNotifications] = useState(false);
-    const [notifications, setNotifications] = useState<Notification[]>([
-        { id: 1, title: 'Payment Received', message: 'You received $120.00 from User 2', time: '5m ago', type: 'success', read: false },
-        { id: 2, title: 'Transfer Pending', message: 'Your transfer of $150.50 to Jane Smith is pending', time: '1h ago', type: 'pending', read: false },
-        { id: 3, title: 'Payment Successful', message: 'Successfully sent $250.00 to John Doe', time: '2h ago', type: 'success', read: true },
-        { id: 4, title: 'Transfer Failed', message: 'Transfer to Bob Williams was cancelled', time: '1d ago', type: 'error', read: true },
-    ]);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+
+    const fetchRealNotifications = async () => {
+        if (!user?.id) return;
+
+        const { data, error } = await supabase
+            .from('transactions')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('updated_at', { ascending: false })
+            .limit(10);
+
+        if (data) {
+            const mapped: Notification[] = data.map(tx => ({
+                id: tx.id,
+                title: tx.status === 'completed' ? 'Payout Successful' :
+                    tx.status === 'failed' ? 'Payout Failed' : 'Transfer Processing',
+                message: tx.status === 'completed'
+                    ? `₦${parseFloat(tx.amount_fiat).toLocaleString()} successfully sent to ${tx.recipient_details?.accountName}`
+                    : `Your transfer of ₦${parseFloat(tx.amount_fiat).toLocaleString()} is being settled.`,
+                time: formatDistanceToNow(new Date(tx.updated_at), { addSuffix: true }),
+                type: tx.status === 'completed' ? 'success' :
+                    tx.status === 'failed' ? 'error' : 'pending',
+                read: tx.status === 'completed' // Consider settled ones as "read" for now or add a read column
+            }));
+            setNotifications(mapped);
+        }
+    };
+
+    useEffect(() => {
+        if (!user?.id) return;
+
+        fetchRealNotifications();
+
+        // REAL-TIME: Listen for any changes in the user's transactions
+        const channel = supabase
+            .channel(`user-notifications-${user.id}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'transactions',
+                    filter: `user_id=eq.${user.id}`
+                },
+                () => {
+                    fetchRealNotifications();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [user?.id]);
 
     const unreadCount = notifications.filter(n => !n.read).length;
 
-    const markAsRead = (id: number) => {
+    const markAsRead = async (id: string | number) => {
         setNotifications(notifications.map(n =>
             n.id === id ? { ...n, read: true } : n
         ));
@@ -63,7 +115,7 @@ export function Header() {
                 <div className="flex items-center gap-4">
                     {/* Welcome message and Wallet Address display */}
                     <div className="flex flex-col items-end gap-0.5">
-                        
+
                         {address ? (
                             <button
                                 onClick={copyAddress}

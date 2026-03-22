@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { web3auth, initWeb3Auth, connectSupabaseToWeb3Auth } from '@/lib/web3auth';
-import { createPublicClient, http, formatEther } from 'viem';
+import { createPublicClient, http, formatEther, parseEther } from 'viem';
 import { flareTestnet } from 'viem/chains';
 import toast from 'react-hot-toast';
 
@@ -106,6 +106,28 @@ export function useWeb3Auth() {
         }
     };
 
+    const sendTransaction = async (to: string, amount: string) => {
+        try {
+            if (!web3auth.provider) throw new Error("Wallet not connected");
+            const accounts = await web3auth.provider.request({ method: "eth_accounts" }) as string[];
+            if (!accounts || accounts.length === 0) throw new Error("No accounts found");
+
+            const txHash = await web3auth.provider.request({
+                method: "eth_sendTransaction",
+                params: [{
+                    from: accounts[0],
+                    to: to,
+                    // Converting amount to Wei and then to Hex string
+                    value: "0x" + parseEther(amount).toString(16),
+                }]
+            }) as string;
+            return txHash;
+        } catch (error: any) {
+            console.error("On-chain transaction failed:", error);
+            throw error;
+        }
+    };
+
     return {
         user,
         address,
@@ -113,6 +135,7 @@ export function useWeb3Auth() {
         isLoading,
         copyAddress,
         signOut,
+        sendTransaction,
         refreshBalance: () => address && fetchBalance(address),
     };
 }

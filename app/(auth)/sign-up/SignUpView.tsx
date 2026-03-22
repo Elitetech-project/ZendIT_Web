@@ -15,7 +15,7 @@ export default function SignUpView() {
     const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [formValues, setFormValues] = useState({
-        username: "",
+        fullName: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -29,7 +29,7 @@ export default function SignUpView() {
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (!formValues.username.trim()
+        if (!formValues.fullName.trim()
             || !formValues.email.trim()
             || !formValues.password.trim()
             || !formValues.phoneNumber.trim()
@@ -50,7 +50,7 @@ export default function SignUpView() {
                 password: formValues.password,
                 options: {
                     data: {
-                        username: formValues.username,
+                        full_name: formValues.fullName,
                         phone_number: formValues.phoneNumber,
                     }
                 }
@@ -117,14 +117,14 @@ export default function SignUpView() {
                     <div className="w-full max-w-sm flex flex-col items-center justify-center  gap-4  " >
 
 
-                        {/* Username input  */}
-                        <label htmlFor="username" className=" w-full flex flex-col items-start gap-1  " >
-                            <span className="text-sm  font-medium  " >Username </span>
+                        {/* Full Name input  */}
+                        <label htmlFor="fullName" className=" w-full flex flex-col items-start gap-1  " >
+                            <span className="text-sm  font-medium  " >Full Name</span>
                             <input
                                 type="text"
-                                id="username"
-                                name="username"
-                                value={formValues.username}
+                                id="fullName"
+                                name="fullName"
+                                value={formValues.fullName}
                                 onChange={(e) => handleChange(e, setFormValues)}
                                 required
                                 className="w-full py-2 px-3 border border-gray-400 outline-none focus:outline-none text-sm rounded-lg " />
