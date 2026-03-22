@@ -26,10 +26,13 @@ export async function GET(request: Request) {
     // 1. Determine target currency
     let targetCurrency = queryCurrency || 'ngn';
 
+    // Helper to get effective currency (USDC/USDT use USD price)
+    const effectiveCurrency = (targetCurrency === 'usdc' || targetCurrency === 'usdt') ? 'usd' : targetCurrency;
+
     // 2. Try cache first
     if (cachedPrice && currentTime - lastFetchTime < CACHE_DURATION) {
         return NextResponse.json({
-            price: cachedPrice[targetCurrency] || cachedPrice['usd'],
+            price: cachedPrice[effectiveCurrency] || cachedPrice['usd'],
             currency: targetCurrency.toUpperCase(),
             symbol: currencySymbols[targetCurrency] || '$',
             source: 'cache'
@@ -56,7 +59,7 @@ export async function GET(request: Request) {
         lastFetchTime = currentTime;
 
         return NextResponse.json({
-            price: prices[targetCurrency],
+            price: prices[effectiveCurrency],
             currency: targetCurrency.toUpperCase(),
             symbol: currencySymbols[targetCurrency] || '$',
             source: 'live'
