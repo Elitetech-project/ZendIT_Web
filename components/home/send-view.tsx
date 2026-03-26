@@ -8,6 +8,7 @@ import { fetchBanks, resolveAccount, initiateTransfer } from '@/lib/flutterwave'
 import toast from 'react-hot-toast';
 import { useWeb3Auth } from '@/hooks/useWeb3Auth';
 import { clsx } from 'clsx';
+import OTPModal from '../OTPModal';
 
 export function SendView() {
     // Form State
@@ -30,6 +31,9 @@ export function SendView() {
     const [isLoadingBanks, setIsLoadingBanks] = useState(false); // New State
     const [countryCode, setCountryCode] = useState('NG'); // New State
     const [selectedCurrency, setSelectedCurrency] = useState('NGN'); // New State
+    const [showOTP, setShowOTP] = useState(false);
+    const [isSendingOTP, setIsSendingOTP] = useState(false);
+    const [initialAttempts, setInitialAttempts] = useState(3);
 
     const { user, sendTransaction } = useWeb3Auth();
     const treasuryWallet = process.env.NEXT_PUBLIC_TREASURY_WALLET_ADDRESS;
@@ -117,7 +121,7 @@ export function SendView() {
             }
 
             // Only show loading state on manual typing, not on pulse updates
-            if (isManualChange || !quote) setIsQuoting(true);
+            if (isManualChange) setIsQuoting(true);
 
             try {
                 const res = await calculateQuote(parseFloat(fiatAmount), selectedCurrency);
@@ -141,6 +145,31 @@ export function SendView() {
         };
     }, [fiatAmount, selectedCurrency]);
 
+    const handleTransferClick = async () => {
+        if (!quote || !user || !treasuryWallet || !accountName) return toast.error("Verify details first!");
+
+        setIsSendingOTP(true);
+        const toastId = toast.loading("Sending verification code...");
+        try {
+            const res = await fetch('/api/otp/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id, email: user.email, userName: user.name || 'User' }),
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+                toast.success('Verification code sent!', { id: toastId });
+                setInitialAttempts(data.attemptsLeft ?? 2); // Default to 2 remaining if we just successfully requested 1
+                setShowOTP(true);
+            } else {
+                toast.error(data.error || 'Failed to send code.', { id: toastId });
+            }
+        } catch (error) {
+            toast.error('Network error while sending code.', { id: toastId });
+        }
+        setIsSendingOTP(false);
+    };
+
     const handleSend = async () => {
         if (!quote || !user || !treasuryWallet || !accountName) return toast.error("Verify details first!");
 
@@ -149,7 +178,6 @@ export function SendView() {
 
         try {
             // Step 1: Create local record
-            toast.loading("Creating local transaction record...", { id: toastId });
             const initResponse = await fetch('/api/transactions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -171,11 +199,11 @@ export function SendView() {
             const { transactionId } = await initResponse.json();
 
             // Step 2: Send FLR to Treasury
-            toast.loading("Please sign the transaction to send FLR to Treasury...", { id: toastId });
+            toast.loading("Please sign the transaction in your wallet...", { id: toastId });
             const txHash = await sendTransaction(treasuryWallet, quote.flrAmount.toString());
 
             // Step 3: Register Hash
-            toast.loading("Registering transaction hash...", { id: toastId });
+            toast.loading("Confirming on Blockchain (this may take 10s)...", { id: toastId });
             await fetch('/api/transactions', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
@@ -183,7 +211,6 @@ export function SendView() {
             });
 
             // Step 4: Final Settlement & Verification
-            toast.loading("Confirming on Flare Blockchain (this may take 10s)...", { id: toastId });
             const verifyResponse = await fetch('/api/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -195,6 +222,22 @@ export function SendView() {
             if (!verifyResponse.ok) {
                 throw new Error(verifyData.details || verifyData.error || 'Payout verification failed');
             }
+
+            // Step 5: Send Success Email Receipt in the background
+            fetch('/api/receipt/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: user.email,
+                    userName: user.name || 'User',
+                    amountFiat: fiatAmount,
+                    amountFlr: quote.flrAmount.toFixed(2),
+                    recipientName: accountName,
+                    bankName: selectedBank.name,
+                    accountNumber: accountNumber,
+                    txHash: txHash
+                })
+            }).catch(e => console.error("Failed to send receipt email:", e));
 
             toast.success("Payout initiated! Your Naira is on the way 🎉", { id: toastId });
             setQuote(null);
@@ -314,7 +357,7 @@ export function SendView() {
                 <div className="space-y-1.5 pt-2">
                     <label className="text-[10px] font-black text-muted-foreground uppercase ml-4 tracking-widest text-[#e33e38]">Payout Amount</label>
                     <div className="relative group pt-2">
-                        <input type="number" placeholder="0.00" value={fiatAmount} onChange={(e) => setFiatAmount(e.target.value)} className="w-full h-14 bg-transparent text-muted-foreground rounded-full pl-16 pr-16 text-sm font-black outline-none border dark:border-white/30 focus:border-[#e33e38]/30 transition-all" />
+                        <input type="number" placeholder="0.00" value={fiatAmount} onChange={(e) => setFiatAmount(e.target.value)} className="w-full h-14 bg-transparent text-muted-foreground rounded-full pl-16 pr-16 text-sm font-black outline-none border dark:border-white/30 focus:border-[#e33e38]/30 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                         <span className="absolute left-12 top-[60%] -translate-y-1/2 font-black text-md text-[#e33e38]">₦</span>
                         <span className="absolute right-8 top-1/2 -translate-y-1/2 font-black text-muted-foreground/30 text-xs">NGN</span>
                     </div>
@@ -348,11 +391,25 @@ export function SendView() {
                     </AnimatePresence>
                 </div>
 
-                <button disabled={!quote || isProcessing || !accountName} onClick={handleSend} className="flex items-center justify-center gap-3 w-full md:w-[60%] mx-auto h-14 rounded-full font-black text-xl bg-[#e33e38] text-white disabled:opacity-20 cursor-pointer shadow-2xl shadow-[#e33e38]/10 hover:shadow-[#e33e38]/30 hover:scale-[1.02] active:scale-95 transition-all">
-                    {isProcessing ? <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white" /> : <Send className="h-5 w-4" />}
-                    {isProcessing ? "Finalizing Transfer..." : "Send to Bank"}
+                <button disabled={!quote || isProcessing || isSendingOTP || !accountName} onClick={handleTransferClick} className="flex items-center justify-center gap-3 w-full md:w-[60%] mx-auto h-14 rounded-full font-black text-xl bg-[#e33e38] text-white disabled:opacity-20 cursor-pointer shadow-2xl shadow-[#e33e38]/10 hover:shadow-[#e33e38]/30 hover:scale-[1.02] active:scale-95 transition-all">
+                    {(isProcessing || isSendingOTP) ? <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white" /> : <Send className="h-5 w-4" />}
+                    {isSendingOTP ? "Sending Code..." : (isProcessing ? "Finalizing Transfer..." : "Send to Bank")}
                 </button>
             </div>
+
+            {showOTP && user && typeof user.email === 'string' && (
+                <OTPModal
+                    userId={user.id}
+                    email={user.email}
+                    userName={user.name || 'User'}
+                    initialAttempts={initialAttempts}
+                    onVerified={() => {
+                        setShowOTP(false);
+                        handleSend();
+                    }}
+                    onCancel={() => setShowOTP(false)}
+                />
+            )}
         </div>
     );
 }

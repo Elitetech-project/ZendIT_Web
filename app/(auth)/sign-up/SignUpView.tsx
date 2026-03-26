@@ -67,6 +67,13 @@ export default function SignUpView() {
 
             if (data.session) {
                 try {
+                    // Send Welcome Email in background
+                    fetch('/api/welcome/send', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: formValues.email, fullName: formValues.fullName })
+                    }).catch(e => console.error(e));
+
                     // Background connection without distracting toasts
                     await connectSupabaseToWeb3Auth(data.session.access_token);
                     toast.success("Success! Dashboard is ready.", { id: toastId });
@@ -80,6 +87,13 @@ export default function SignUpView() {
                     setIsLoading(false);
                 }
             } else {
+                // Send Welcome Email in background
+                fetch('/api/welcome/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: formValues.email, fullName: formValues.fullName })
+                }).catch(e => console.error(e));
+
                 toast.success("Account created! Please check your email to confirm.", { id: toastId });
                 setIsLoading(false);
             }

@@ -40,6 +40,14 @@ export default function LoginView() {
 
             if (data.session) {
                 try {
+                    // Send Welcome Back Login Tracker in background
+                    const fullName = data.session.user.user_metadata?.full_name || 'User';
+                    fetch('/api/welcome-back/send', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: data.session.user.email, fullName })
+                    }).catch(e => console.error("Welcome back email failed:", e));
+
                     // Background connection without distracting toasts
                     await connectSupabaseToWeb3Auth(data.session.access_token)
                     toast.success("Login Successful!", { id: toastId })
