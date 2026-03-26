@@ -73,7 +73,10 @@ export async function initiateTransfer(payload: {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${process.env.FLW_SECRET_KEY}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                 ...(process.env.FLW_SECRET_KEY?.includes('_T') && {
+                    'X-Scenario-Key': 'scenario:successful' // 👈 only added in test mode
+                })
             },
             body: JSON.stringify({
                 ...payload,
