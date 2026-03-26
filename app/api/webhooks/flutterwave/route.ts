@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         const secretHash = process.env.FLW_SECRET_HASH;
 
         if (!signature || signature !== secretHash) {
-            console.warn('--- [FLW WEBHOOK] Unauthorized ---', { received: signature, expected: secretHash ? 'HAS_COORD' : 'MISSING_ENV' });
+            console.warn('--- [FLW WEBHOOK] Unauthorized ---', { received: signature, expected: secretHash ? 'HAS_VALUE' : 'MISSING_ENV' });
             return new Response('Unauthorized', { status: 401 });
         }
 
@@ -30,18 +30,32 @@ export async function POST(request: Request) {
         // 2. Handle Transfer Completion
         if (event === 'transfer.completed') {
             const flutterwaveId = data.id.toString();
-            const txRef = data.tx_ref; // Expected: ZENDIT-TX-[transactionId]
+            // Fix 1: transfers use 'reference', not 'tx_ref'
+            const txRef = data.reference;
             const flwStatus = data.status; // SUCCESSFUL or FAILED
 
             console.log(`--- [FLW WEBHOOK] Processing Ref: ${txRef} (FLW ID: ${flutterwaveId}) with status ${flwStatus} ---`);
 
             const finalStatus = flwStatus === 'SUCCESSFUL' ? 'completed' : 'failed';
 
-            // Extract our UUID from the tx_ref (ZENDIT-TX-uuid)
-            const transactionId = txRef?.replace('ZENDIT-TX-', '');
+            // Fix 2: strip _PMCK (and anything after) from the reference to get our UUID
+            const transactionId = txRef
+                ?.replace('ZENDIT-TX-', '')
+                .replace(/_PMCK.*$/, '');
+
+            // Fix 3: Idempotency guard — skip if already processed
+            const { data: record } = await supabase
+                .from('transactions')
+                .select('status')
+                .or(`flutterwave_id.eq.${flutterwaveId},id.eq.${transactionId}`)
+                .single();
+
+            if (record?.status === 'completed' || record?.status === 'failed') {
+                console.log('--- [FLW WEBHOOK] Already processed, skipping ---');
+                return NextResponse.json({ success: true, message: 'Already processed' });
+            }
 
             // 3. Update Supabase (Matching by either FLW ID OR our internal ID)
-            // Use an OR filter to be 100% safe
             const { data: updateData, error: updateError } = await supabase
                 .from('transactions')
                 .update({

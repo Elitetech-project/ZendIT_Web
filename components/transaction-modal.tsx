@@ -3,7 +3,6 @@
 import { X, CheckCircle, Clock, XCircle, Calendar, User, Building2, CreditCard, DollarSign, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/button';
-
 import { toast } from 'react-hot-toast';
 
 export type TransactionStatus = 'pending' | 'successful' | 'cancelled' | 'completed' | 'processing' | 'failed';
@@ -15,7 +14,7 @@ export interface Transaction {
     amountFlr?: string;
     date: string;
     time?: string;
-    status: string;
+    status: TransactionStatus;
     type?: 'send' | 'receive' | 'cashback';
     bankName?: string;
     accountNumber?: string;
@@ -45,9 +44,8 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
         return `${hash.slice(0, 10)}...${hash.slice(-8)}`;
     };
 
-    const getStatusConfig = (status: string) => {
-        const lowerStatus = status.toLowerCase();
-        switch (lowerStatus) {
+    const getStatusConfig = (status: TransactionStatus) => {
+        switch (status) {
             case 'completed':
             case 'successful':
                 return {
@@ -75,14 +73,6 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                     borderColor: 'border-red-500/20',
                     label: 'Failed',
                 };
-            default:
-                return {
-                    icon: Clock,
-                    color: 'text-gray-600',
-                    bgColor: 'bg-gray-500/10',
-                    borderColor: 'border-gray-500/20',
-                    label: status.toUpperCase(),
-                };
         }
     };
 
@@ -99,7 +89,7 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onCloseAction}
-                        className="fixed inset-0 bg-white/12 backdrop-blur-sm z-50 font-satoshi "
+                        className="fixed inset-0 bg-white/12 backdrop-blur-sm z-50 font-satoshi"
                     />
 
                     {/* Modal */}
@@ -107,7 +97,7 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="fixed inset-x-4  top-1/2 -translate-y-1/2 z-50 max-w-md mx-auto"
+                        className="fixed inset-x-4 top-1/2 -translate-y-1/2 z-50 max-w-md mx-auto"
                     >
                         <div className="bg-background rounded-2xl shadow-2xl overflow-hidden border border-white/5">
                             {/* Header */}
@@ -131,21 +121,27 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                                     onClick={() => copyToClipboard(transaction.txHash || '', 'Transaction Hash')}
                                     className="group text-[10px] opacity-100 font-mono mt-2 break-all bg-black/20 p-2 rounded-lg border border-white/10 cursor-pointer hover:bg-black/40 transition-all"
                                 >
-                                    <span className=" uppercase mr-1">Hash:</span>
+                                    <span className="uppercase mr-1">Hash:</span>
                                     {formatHash(transaction.txHash || 'N/A')}
-                                    <span className="float-right opacity-0 group-hover:opacity-100 transition-opacity text-[8px] uppercase tracking-tighter">Click to Copy</span>
+                                    <span className="float-right opacity-0 group-hover:opacity-100 transition-opacity text-[8px] uppercase tracking-tighter">
+                                        Click to Copy
+                                    </span>
                                 </div>
                             </div>
 
                             {/* Content - Scrollable with Hidden Scrollbar */}
-                            <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+                            <div
+                                className="p-6 space-y-4 max-h-[60vh] overflow-y-auto scrollbar-hide"
+                                style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+                            >
                                 <style jsx>{`
                                     .scrollbar-hide::-webkit-scrollbar {
                                         display: none;
                                     }
                                 `}</style>
+
                                 {/* Amount Section */}
-                                <div className=" flex items-center justify-between py-4 border-b border-white/5 ">
+                                <div className="flex items-center justify-between py-4 border-b border-white/5">
                                     <p className="text-xl font-bold uppercase tracking-[0.2em] text-xs text-white">Payout Amount:</p>
                                     <div className="text-right">
                                         <p className="text-3xl font-black italic mb-1 text-white">{transaction.amount}</p>
@@ -155,19 +151,23 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
 
                                 {/* Details */}
                                 <div className="space-y-3 border-t pt-4">
-                                    <div className={`flex items-center gap-3`}>
+
+                                    {/* Status */}
+                                    <div className="flex items-center gap-3">
                                         <div className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary">
-                                            <StatusIcon className="h-4 w-4 text-muted-foreground text-green-700 " />
+                                            <StatusIcon className={`h-4 w-4 ${statusConfig.color}`} />
                                         </div>
                                         <div className="flex-1">
                                             <p className="text-xs text-muted-foreground">Status</p>
-                                            <span className={`font-semibold text-sm `}>
+                                            <span className={`font-semibold text-sm ${statusConfig.color}`}>
                                                 {statusConfig.label}
                                             </span>
                                         </div>
                                     </div>
+
+                                    {/* Recipient */}
                                     <div className="flex items-center gap-3">
-                                        <div className="flex h-7 w-7  items-center justify-center rounded-full bg-secondary">
+                                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary">
                                             <User className="h-4 w-4 text-muted-foreground" />
                                         </div>
                                         <div className="flex-1">
@@ -176,9 +176,10 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                                         </div>
                                     </div>
 
+                                    {/* Bank */}
                                     {transaction.bankName && (
                                         <div className="flex items-center gap-3">
-                                            <div className="flex h-7 w-7  items-center justify-center rounded-full bg-secondary">
+                                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary">
                                                 <Building2 className="h-4 w-4 text-muted-foreground" />
                                             </div>
                                             <div className="flex-1">
@@ -188,9 +189,10 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                                         </div>
                                     )}
 
+                                    {/* Account Number */}
                                     {transaction.accountNumber && (
                                         <div className="flex items-center gap-3">
-                                            <div className="flex h-7 w-7  items-center justify-center rounded-full bg-secondary">
+                                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary">
                                                 <CreditCard className="h-4 w-4 text-muted-foreground" />
                                             </div>
                                             <div className="flex-1">
@@ -200,8 +202,9 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                                         </div>
                                     )}
 
+                                    {/* Date & Time */}
                                     <div className="flex items-center gap-3">
-                                        <div className="flex h-7 w-7  items-center justify-center rounded-full bg-secondary">
+                                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary">
                                             <Calendar className="h-4 w-4 text-muted-foreground" />
                                         </div>
                                         <div className="flex-1">
@@ -212,9 +215,10 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                                         </div>
                                     </div>
 
+                                    {/* Type */}
                                     {transaction.type && (
                                         <div className="flex items-center gap-3">
-                                            <div className="flex h-7 w-7  items-center justify-center rounded-full bg-secondary">
+                                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary">
                                                 <DollarSign className="h-4 w-4 text-muted-foreground" />
                                             </div>
                                             <div className="flex-1">
@@ -225,10 +229,15 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                                     )}
                                 </div>
 
-
-                                <Button variant={"default"} className='cursor-pointer mt-3' > Download Reciept <Download size={16} /> </Button>
-
-
+                                {/* Download Button */}
+                                <Button
+                                    variant="default"
+                                    className="cursor-pointer mt-3 w-full"
+                                    disabled
+                                    onClick={() => {/* TODO: implement PDF receipt generation */ }}
+                                >
+                                    Download Receipt <Download size={16} className="ml-2" />
+                                </Button>
                             </div>
                         </div>
                     </motion.div>
