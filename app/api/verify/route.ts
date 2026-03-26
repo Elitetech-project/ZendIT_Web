@@ -69,12 +69,18 @@ export async function POST(request: Request) {
         // 5. CALL FLUTTERWAVE: The Real Fiat Settlement
         console.log(`Initiating Flutterwave payout for Transaction ${transactionId}...`);
 
+        // Detected if we are in Test Mode to apply the mock success suffix (_PMCK)
+        const isTestMode = process.env.FLW_SECRET_KEY?.includes('_T');
+        const flwRef = isTestMode ? `ZENDIT-TX-${transactionId}_PMCK` : `ZENDIT-TX-${transactionId}`;
+
+        console.log(`Using Reference: ${flwRef} (Test Mode: ${isTestMode})`);
+
         const payoutResponse = await initiateTransfer({
             account_bank: record.recipient_details.bankCode,
             account_number: record.recipient_details.accountNumber,
             amount: parseFloat(record.amount_fiat),
             currency: 'NGN',
-            reference: `ZENDIT-TX-${transactionId}`,
+            reference: flwRef,
         });
 
         // Log the full Flutterwave response for debugging
