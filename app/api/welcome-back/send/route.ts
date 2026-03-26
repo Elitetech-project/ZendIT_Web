@@ -25,7 +25,7 @@ export async function POST(req: Request) {
                     </div>
 
                     <div style="text-align: center; margin-bottom: 30px;">
-                        <a href="https://zendit.finance/dashboard" style="background: #e33e38; color: #fff; text-decoration: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; display: inline-block;">Go to Dashboard</a>
+                        <a href="https://app.zendit.online/dashboard" style="background: #e33e38; color: #fff; text-decoration: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; display: inline-block;">Go to Dashboard</a>
                     </div>
 
                     <div style="text-align: center; font-size: 11px; color: #999; line-height: 1.5; border-top: 1px solid #eee; padding-top: 20px;">
