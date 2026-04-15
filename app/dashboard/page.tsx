@@ -122,8 +122,7 @@ export default function Page() {
                             <motion.div
                                 layoutId="activeTab"
                                 className="absolute inset-0 rounded-xl bg-[#e33e38] shadow-sm"
-                                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                            />
+                                         />
                         )}
                         <span className="relative z-10">Send</span>
                     </button>
@@ -138,8 +137,7 @@ export default function Page() {
                             <motion.div
                                 layoutId="activeTab"
                                 className="absolute inset-0  rounded-xl bg-[#e33e38] shadow-sm"
-                                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                            />
+                                      />
                         )}
                         <span className="relative z-10">Receive</span>
                     </button>
