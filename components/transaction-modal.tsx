@@ -20,6 +20,7 @@ export interface Transaction {
     accountNumber?: string;
     reference?: string;
     txHash?: string;
+    errorNote?: string;
 }
 
 interface TransactionModalProps {
@@ -224,6 +225,18 @@ export function TransactionModal({ isOpen, onCloseAction, transaction }: Transac
                                             <div className="flex-1">
                                                 <p className="text-xs text-muted-foreground">Type</p>
                                                 <p className="font-medium capitalize text-sm">{transaction.type}</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {/* Error Note */}
+                                    {transaction.errorNote && (
+                                        <div className="flex items-start gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/10">
+                                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-red-500/10 shrink-0">
+                                                <XCircle className="h-4 w-4 text-red-500" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <p className="text-[10px] text-red-500/50 uppercase font-bold tracking-widest">Failure Reason</p>
+                                                <p className="text-xs font-medium text-red-500/80 leading-relaxed">{transaction.errorNote}</p>
                                             </div>
                                         </div>
                                     )}

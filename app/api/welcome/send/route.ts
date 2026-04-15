@@ -5,7 +5,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
     try {
-        const { email, fullName } = await req.json();
+        const body = await req.json();
+        const { email } = body;
+        // Handle both fullName and userName, fallback to User
+        const fullName = body.fullName || body.userName || 'User';
 
         const { error: resendError } = await resend.emails.send({
             from: 'ZendIT <noreply@zendit.online>', 
@@ -14,7 +17,6 @@ export async function POST(req: Request) {
             html: `
                 <div style="font-family: sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">
                     <div style="text-align: center; margin-bottom: 20px;">
-                        <!-- Email clients REQUIRE an absolute 'https://' URL to render images. Change 'zendit.finance' to your real domain once deployed! -->
                         <img src="https://zend-it-web.vercel.app/logos/Zendit_logo.png" alt="ZendIT" width="60" height="60" style="border-radius: 50%;" />
                         <h2 style="color: #e33e38; margin: 10px 0 0 0; font-size: 28px; letter-spacing: -0.5px;">ZendIT</h2>
                     </div>

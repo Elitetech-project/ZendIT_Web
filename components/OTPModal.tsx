@@ -44,7 +44,7 @@ export default function OTPModal({
             const res = await fetch('/api/otp/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, email, userName }),
+                body: JSON.stringify({ userId, email, userName, fullName: userName }),
             });
             const data = await res.json();
             if (res.ok && data.success) {

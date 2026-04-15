@@ -11,7 +11,10 @@ const supabase = createClient(
 
 export async function POST(req: Request) {
     try {
-        const { userId, email, fullName } = await req.json();
+        const body = await req.json();
+        const { userId, email } = body;
+        // Handle both fullName and userName, fallback to User
+        const fullName = body.fullName || body.userName || 'User';
 
         // Check how many OTP requests were made in the last hour
         const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();

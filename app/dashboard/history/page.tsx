@@ -44,6 +44,7 @@ export default function HistoryPage() {
             bankName: tx.recipient_details?.bankName,
             accountNumber: tx.recipient_details?.accountNumber,
             txHash: tx.tx_hash,
+            errorNote: tx.error_note,
             reference: `TXN${tx.id.substring(0, 8).toUpperCase()}`,
         };
         setSelectedTransaction(mappedTx);

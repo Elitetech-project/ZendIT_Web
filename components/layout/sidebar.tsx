@@ -61,7 +61,7 @@ export function Sidebar({ className }: SidebarProps) {
         )}>
             <div className="flex h-16 items-center border-b px-6">
                 <Link href="/" className="flex items-center gap-2">
-                    <Image src="/logos/zendit-logo-removebg-preview.png" alt="Logo" width={100} height={100} className='w-15 h-auto' />
+                    <Image src="/logos/logo.png" alt="Logo" width={100} height={100} className='w-15 h-auto' />
                 </Link>
             </div>
             <nav className="flex-1 space-y-1 pt-8 px-4 py-4 border-r border-gray-400 ">

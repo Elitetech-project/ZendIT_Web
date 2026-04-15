@@ -64,18 +64,21 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
     try {
         const body = await request.json();
-        const { transactionId, txHash } = body;
+        const { transactionId, txHash, status, errorNote } = body;
 
-        if (!transactionId || !txHash) {
-            return NextResponse.json({ error: 'Missing transactionId or txHash' }, { status: 400 });
+        if (!transactionId) {
+            return NextResponse.json({ error: 'Missing transactionId' }, { status: 400 });
         }
 
-        // Securely attach hash to the pending transaction
+        const updateData: any = {};
+        if (txHash) updateData.tx_hash = txHash;
+        if (status) updateData.status = status;
+        if (errorNote) updateData.error_note = errorNote;
+
+        // Securely attach data to the pending transaction
         const { data, error } = await supabase
             .from('transactions')
-            .update({
-                tx_hash: txHash,
-            })
+            .update(updateData)
             .eq('id', transactionId)
             .select()
             .single();

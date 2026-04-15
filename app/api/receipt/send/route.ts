@@ -5,7 +5,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
     try {
-        const { email, fullName, amountFiat, amountFlr, recipientName, bankName, accountNumber, txHash } = await req.json();
+        const body = await req.json();
+        const { email, amountFiat, amountFlr, recipientName, bankName, accountNumber, txHash } = body;
+        // Handle both fullName and userName, fallback to User
+        const fullName = body.fullName || body.userName || 'User';
 
         const { error: resendError } = await resend.emails.send({
             from: 'ZendIT <noreply@zendit.online>',

@@ -154,7 +154,12 @@ export function SendView() {
             const res = await fetch('/api/otp/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: user.id, email: user.email, userName: user.name || 'User' }),
+                body: JSON.stringify({ 
+                    userId: user.id, 
+                    email: user.email, 
+                    userName: user.name || 'User',
+                    fullName: user.user_metadata?.full_name || user.name || 'User'
+                }),
             });
             const data = await res.json();
             if (res.ok && data.success) {
@@ -175,6 +180,15 @@ export function SendView() {
 
         setIsProcessing(true);
         const toastId = toast.loading("Initiating transaction...");
+        let currentTransactionId: string | null = null;
+
+        const mapError = (err: any) => {
+            const msg = err.message?.toLowerCase() || "";
+            if (msg.includes("user rejected") || msg.includes("denied")) return "Transaction cancelled in wallet.";
+            if (msg.includes("insufficient funds")) return "Insufficient balance to cover transfer and gas fees.";
+            if (msg.includes("exceeds the balance")) return "Amount exceeds your available wallet balance.";
+            return err.message || "An unexpected error occurred.";
+        };
 
         try {
             // Step 1: Create local record
@@ -197,6 +211,7 @@ export function SendView() {
 
             if (!initResponse.ok) throw new Error("Failed to create record");
             const { transactionId } = await initResponse.json();
+            currentTransactionId = transactionId;
 
             // Step 2: Send FLR to Treasury
             toast.loading("Please sign the transaction in your wallet...", { id: toastId });
@@ -207,7 +222,7 @@ export function SendView() {
             await fetch('/api/transactions', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ transactionId, txHash })
+                body: JSON.stringify({ transactionId, txHash, status: 'processing' })
             });
 
             // Step 4: Final Settlement & Verification
@@ -230,6 +245,7 @@ export function SendView() {
                 body: JSON.stringify({
                     email: user.email,
                     userName: user.name || 'User',
+                    fullName: user.user_metadata?.full_name || user.name || 'User',
                     amountFiat: fiatAmount,
                     amountFlr: quote.flrAmount.toFixed(2),
                     recipientName: accountName,
@@ -240,6 +256,8 @@ export function SendView() {
             }).catch(e => console.error("Failed to send receipt email:", e));
 
             toast.success("Payout initiated! Your Naira is on the way 🎉", { id: toastId });
+            
+            // Clear Form
             setQuote(null);
             setFiatAmount('');
             setAccountNumber('');
@@ -247,7 +265,21 @@ export function SendView() {
             setSelectedBank(null);
 
         } catch (error: any) {
-            toast.error(error.message || "Transaction failed.", { id: toastId });
+            const userFriendlyError = mapError(error);
+            toast.error(userFriendlyError, { id: toastId });
+
+            // Update record to FAILED in background if it exists
+            if (currentTransactionId) {
+                fetch('/api/transactions', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        transactionId: currentTransactionId, 
+                        status: 'failed',
+                        errorNote: userFriendlyError 
+                    })
+                }).catch(e => console.error("Failed to update status to FAILED:", e));
+            }
         } finally {
             setIsProcessing(false);
         }
